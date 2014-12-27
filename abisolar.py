@@ -96,6 +96,7 @@ def query_settings():
     return query_command("QPIRI",finish_sett);
 
 def setOutputSource(val):
+    print "setting out source",val
     def finish_cb(data):
         return (data[:3] == 'ACK')
     return query_command("POP"+val,finish_cb);
