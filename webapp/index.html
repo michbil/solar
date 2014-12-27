@@ -70,21 +70,68 @@
     </div>
 
     <div class="rightsection">
-        <div class="input-group"><span class="input-group-addon" id="sizing-addon2">Активная мощность</span>{{outputActivePower}}Вт</div>
-        <div class="input-group"><span class="input-group-addon" id="sizing-addon2">Общая мощность</span>{{outputApparentPower}}Вт</div>
-        <div class="input-group"><span class="input-group-addon" id="sizing-addon2">Коеффициент мощности</span>{{(outputActivePower / outputApparentPower).toPrecision(2)}}</div>
-        <div class="input-group"><span class="input-group-addon" id="sizing-addon2">Нагрузка</span>{{batteryVoltage}}%</div>
-        <div class="input-group"><span class="input-group-addon" id="sizing-addon2">Напряжение выход</span> {{outputVoltage}}В</div>
-        <div class="input-group"><span class="input-group-addon" id="sizing-addon2">Частота выход </span>{{outputFrequency}}Гц</div>
+        <table class="table table-striped">
+            <tr>
+                <th class="tg-031e">Параметр</th>
+                <th class="tg-031e">Значение</th>
+            </tr>
+            <tr>
+                <td class="tg-031e">Активная мощность</td>
+                <td class="tg-031e">{{outputActivePower}}Вт</td>
+            </tr>
+            <tr>
+                <td class="tg-031e">Общая мощность</td>
+                <td class="tg-031e">{{outputApparentPower}}Вт</td>
+            </tr>
+            <tr>
+                <td class="tg-031e">Коеффициент мощности  </td>
+                <td class="tg-031e">{{(outputActivePower / outputApparentPower).toPrecision(2)}}  </td>
+            </tr>
+
+            <tr>
+                <td class="tg-031e">Напряжение выход  </td>
+                <td class="tg-031e">{{outputVoltage}}В  </td>
+            </tr>
+
+            <tr>
+                <td class="tg-031e">Частота выход</td>
+                <td class="tg-031e">{{outputFrequency}}Гц  </td>
+            </tr>
+
+            <tr>
+                <td class="tg-031e">Нагрузка</td>
+                <td class="tg-031e">{{batteryVoltage}}%</td>
+            </tr>
+        </table>
 
 
     </div>
 
 
     <div style="clear: both;">
-       <p>Режим работы: {{workMode}}</p>
-        <p>{{chargeSource}} {{loadSource}}</p>
-   
+
+        <h1>Рабочие параметры</h1>
+
+        <table class="table table-striped">
+            <tr>
+                <th class="tg-031e">Ремим</th>
+                <th class="tg-031e">Значение</th>
+            </tr>
+            <tr>
+                <td class="tg-031e">Режим работы</td>
+                <td class="tg-031e">{{workMode}}</td>
+            </tr>
+            <tr>
+                <td class="tg-031e">Источник зарядки</td>
+                <td class="tg-031e">{{chargeSource}}</td>
+            </tr>
+            <tr>
+                <td class="tg-031e">Тип нагрузки</td>
+                <td class="tg-031e">{{loadSource}}</td>
+            </tr>
+
+        </table>
+
     </div>
 
 
