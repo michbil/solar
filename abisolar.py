@@ -89,6 +89,11 @@ def query_settings():
         return {"outputSource":outputSource,"chargeSource":chargeSource}
     return query_command("QPIRI",finish_cb);
 
+def setOutputSource(val):
+    def finish_cb(data):
+        return data[0]
+    return query_command("POP"+val,finish_cb);
+
 def query_params():
 
     def finish_cb(data):
@@ -130,4 +135,4 @@ if __name__ == "__main__":
     print query_mode()
     print query_params()
     print query_settings()
-    print "CRC =", crc("QPIGS")
+    print setOutputSource("00")
