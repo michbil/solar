@@ -93,9 +93,9 @@ var MainCtrl = function($scope) {
 
     // handles incoming notification
     $scope.handleNotification = function (deviceId, notification) {
-        console.log("Notification inconming")
+
         if (notification.notification == "equipment") {
-            decode_eq(notification.parameters);
+            decode_eq(notification.parameters.equipment,notification.parameters.state);
         }
         else if (notification.notification == "$device-update") {
             if (notification.parameters.status) this.device.status = notification.parameters.status;
@@ -106,7 +106,7 @@ var MainCtrl = function($scope) {
 
 
      function decode_eq(code,p) {
-
+         console.log("Notification inconming "+code+" "+p)
              switch (code) {
                  case "MODE":
                      workInfo.decodeWorkMode(p);
