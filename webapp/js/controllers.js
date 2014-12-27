@@ -9,12 +9,19 @@ outputModes = {
      'SBU': '02',
 }
 chargeSources = {
-    'Utility':00,
-    'Solar first':01,
-    'Utility and Solar':02,
-    'Solar only':03
+    'Utility':"00",
+    'Solar first':"01",
+    'Utility and Solar':"02",
+    'Solar only':"03"
 }
 
+getKeyByValue = function( obj, value ) {
+    var i = 0;
+    for( var prop in obj ) {
+        if (i==value) return prop;
+       i++;
+    }
+}
 
 
 WorkInfo.prototype = {
@@ -154,6 +161,11 @@ var MainCtrl = function($scope) {
                  case 'BAT_CAP':$scope.batteryCapacity = p; break;
 
                  case 'BAT_DISCH_CURR':$scope.batDischargeCurrent = p; break;
+                 case 'SETT':
+                     $scope.settings = p;
+                     $scope.chargePri = getKeyByValue(chargeSources,parseInt($scope.settings['chargeSource']))
+                     $scope.loadPri = getKeyByValue(outputModes,parseInt($scope.settings['outputSource']))
+                     break;
                  case 'STATUS':
                      $scope.deviceStatus = p;
                      decode_status(p);
