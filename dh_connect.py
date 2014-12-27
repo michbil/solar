@@ -18,7 +18,7 @@ import devicehive.device.ws
 import devicehive.interfaces
 import threading
 
-from abisolar import query_params,query_mode
+from abisolar import query_params,query_mode,query_settings
 
 
 class SolarInfo(object):
