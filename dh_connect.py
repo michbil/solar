@@ -145,7 +145,7 @@ class SolarApp(object):
     def on_command(self, device_id, command, finished):
         if command.command == 'refresh':
             self.status_notify();
-            finish_deferred.callback(devicehive.CommandResult('Completed'))
+            finished.callback(devicehive.CommandResult('Completed'))
         else :
             finished.errback(NotImplementedError('Unknown command {0}.'.format(command.command)))
     
