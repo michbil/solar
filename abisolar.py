@@ -1,7 +1,13 @@
 import serial
 import time
 
-ser = serial.Serial(port="/dev/ttyAMA0",baudrate=2400)
+def init():
+    global ser
+    ser = serial.Serial(port="/dev/ttyAMA0",baudrate=2400)
+
+def init_test():
+    global ser
+    ser = {}
 
 POLYNOMIAL = 0x1021
 PRESET = 0
@@ -72,13 +78,13 @@ def query_command(cmdname,cb):
 
 
 def query_mode():
-    def finish_cb(data):
+    def finish_mode(data):
         return data[0]
-    return query_command("QMOD",finish_cb);
+    return query_command("QMOD",finish_mode);
 
 
 def query_settings():
-    def finish_cb(data):
+    def finish_sett(data):
         vars = data.split(" ")
 
         outputSource = vars[16];
@@ -87,7 +93,7 @@ def query_settings():
         print outputSource,chargeSource
 
         return {"outputSource":outputSource,"chargeSource":chargeSource}
-    return query_command("QPIRI",finish_cb);
+    return query_command("QPIRI",finish_sett);
 
 def setOutputSource(val):
     def finish_cb(data):
@@ -96,7 +102,7 @@ def setOutputSource(val):
 
 def query_params():
 
-    def finish_cb(data):
+    def finish_p(data):
         vars = data.split(" ")
 
         data = ""
@@ -129,7 +135,7 @@ def query_params():
         print "Battery volts %s battery percent %s" % (out['pBatteryVoltage'],out['batteryCapacity'])
         return out
 
-    return query_command("QPIGS",finish_cb);
+    return query_command("QPIGS",finish_p);
 
 if __name__ == "__main__":
     print query_mode()

@@ -17,8 +17,30 @@ import devicehive.auto
 import devicehive.device.ws
 import devicehive.interfaces
 import threading
+import sys
 
+import abisolar
 from abisolar import *
+
+def query_command_testing(cmdname,cb):
+    result = 'NAK'
+    if cmdname == "QMOD":
+        result = 'L'
+    if cmdname == "QPIRI":
+        result = '230.0 04.3 230.0 50.0 04.3 1000 0800 12.0 11.8 10.5 14.1 13.5 0 20 50 0 1 2 - 01 1 0 14.0 0 0 0xbbJ 0x0'
+    if cmdname == "QPIGS":
+        result =  '234.0 50.0 234.0 50.0 0070 0032 007 422 13.49 00 100 0522 0000 000.1 13.50 00000 10111101 22 03 00000 100 0xda 0xd6 0x0d'
+    if cmdname[:3] == 'POP':
+        result = 'ACK'
+    print result
+    return cb(result);
+
+if sys.platform == 'darwin':
+    init_test()
+    abisolar.query_command = query_command_testing;
+
+else:
+    init()
 
 
 class SolarInfo(object):
@@ -151,9 +173,10 @@ class SolarApp(object):
         if command.command == 'setOutputSource':
             res = setOutputSource(command.parameters['source']);
             if (res):
-                finished.callback(devicehive.CommandResult('ACK'))
+                finished.callback(devicehive.CommandResult('Completed'))
             else:
-                finished.callback(devicehive.CommandResult('NACK'))
+                finished.callback(devicehive.CommandResult('Error'))
+            return
 
         finished.errback(NotImplementedError('Unknown command {0}.'.format(command.command)))
     
