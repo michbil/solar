@@ -92,8 +92,9 @@ var MainCtrl = function($scope) {
 
     // handles incoming notification
     $scope.handleNotification = function (deviceId, notification) {
+        console.log("Notification inconming")
         if (notification.notification == "equipment") {
-            if (notification.parameters.equipment == "LED") this.updateLedState(notification.parameters.state);
+            decode_eq(notification.parameters);
         }
         else if (notification.notification == "$device-update") {
             if (notification.parameters.status) this.device.status = notification.parameters.status;
@@ -103,10 +104,9 @@ var MainCtrl = function($scope) {
     }
 
 
-     function decode_eq(data) {
-         jQuery.each(data, function (index, equipment) {
-             var p = equipment.parameters.state;
-             switch (equipment.id) {
+     function decode_eq(code,p) {
+
+             switch (code) {
                  case "MODE":
                      workInfo.decodeWorkMode(p);
                      $scope.workMode = workInfo.getWorkMode();
@@ -145,7 +145,7 @@ var MainCtrl = function($scope) {
 
 
              }
-         });
+
 
      }
 
@@ -229,7 +229,10 @@ var MainCtrl = function($scope) {
 
     $scope.deviceHive.getEquipmentState($scope.device.id)
         .done(function (data) {
-            decode_eq(data);
+            jQuery.each(data, function (index, equipment) {
+                var p = equipment.parameters.state;
+                decode_eq(equipment.id,p);
+            });
             $scope.$apply();
         })
         .fail($scope.handleError);
