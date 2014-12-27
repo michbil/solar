@@ -98,9 +98,9 @@ def query_settings():
 def setOutputSource(val):
     print "setting out source",val
     def finish_cb(data):
-        v = (data[:3] == 'ACK')
-        print data,v
-        return v
+        #v = (data[:3] == 'ACK')
+        #print data,v
+        return data
     return query_command("POP"+val,finish_cb);
 
 def query_params():

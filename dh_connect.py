@@ -173,11 +173,8 @@ class SolarApp(object):
         if command.command == 'setOutputSource':
            # import pudb; pu.db
             res = setOutputSource(command.parameters['source']);
-            if (res):
-                finished.callback(devicehive.CommandResult('Completed'))
-            else:
-                finished.callback(devicehive.CommandResult('Error'))
-            return
+
+            finished.callback(devicehive.CommandResult(res)
 
         finished.errback(NotImplementedError('Unknown command {0}.'.format(command.command)))
     
