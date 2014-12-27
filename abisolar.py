@@ -84,7 +84,7 @@ def query_settings():
         outputSource = vars[16];
         chargeSource = vars[17];
 
-        print outputSoruce,chargeSource
+        print outputSource,chargeSource
 
         return {"outputSource":outputSource,"chargeSource":chargeSource}
     return query_command("QPIRI",finish_cb);
