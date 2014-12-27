@@ -153,6 +153,7 @@ class SolarApp(object):
     def status_notify(self):
         line_mode = query_mode();
         params = query_params();
+        settings = query_settings()
         if self.connected :
             self.factory.notify('equipment',   {'equipment': 'MODE', 'state': line_mode},     self.info.id, self.info.key)
             self.factory.notify('equipment',   {'equipment': 'PVV', 'state': params["pvInputVoltage1"]},     self.info.id, self.info.key)
@@ -174,6 +175,7 @@ class SolarApp(object):
 
             self.factory.notify('equipment',   {'equipment': 'BAT_DISCH_CURR', 'state': params["batDischargeCurrent"]},     self.info.id, self.info.key)
             self.factory.notify('equipment',   {'equipment': 'STATUS', 'state': params["deviceStatus"]},     self.info.id, self.info.key)
+            self.factory.notify('equipment',   {'equipment': 'Settings', 'state': settings},     self.info.id, self.info.key)
 
 
 
