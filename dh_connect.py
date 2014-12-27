@@ -174,6 +174,8 @@ class SolarApp(object):
             src = int(command.parameters['source'])
             res = setOutputSource("%.2d" % src)
             finished.callback(devicehive.CommandResult(res))
+            settings = query_settings()
+            self.factory.notify('equipment',   {'equipment': 'SETT', 'state': settings},     self.info.id, self.info.key)
             return
 
         finished.errback(NotImplementedError('Unknown command {0}.'.format(command.command)))

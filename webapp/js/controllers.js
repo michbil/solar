@@ -337,7 +337,7 @@ var MainCtrl = function($scope) {
     $scope.setConnection();
     $scope.changeLoad = function (val) {
         $('#load_ajax').html('<img src="img/ajax-loader.gif">')
-
+        console.log(val+" "+outputModes[val])
         result = $scope.deviceHive.sendCommand($scope.device.id, "setOutputSource", {"source":outputModes[val]})
         result.result(function(res) {
             $('#load_ajax').html(res.status)
