@@ -217,13 +217,13 @@ if __name__ == '__main__':
     solar = SolarApp(conf)
     # Automacti factory
     # Also it is possible to use C{devicehive.poll.PollFactory} or C{devicehive.ws.WebSocketFactory}
-    # solar_factory = devicehive.auto.AutoFactory(solar)
+    solar_factory = devicehive.auto.AutoFactory(solar)
     #solar_factory = devicehive.device.ws.WebSocketFactory(solar)
-    solar_factory = devicehive.poll.PollFactory(solar)
+    #solar_factory = devicehive.poll.PollFactory(solar)
     # Send notification right after registration
     solar.status_notify()
     # Connect to device-hive
-    # solar_factory.connect('ws://pg.devicehive.com:8010')
+    #solar_factory.connect('ws://kidgo.com.ua:8080/DeviceHiveJava/websocket')
     devicehive.poll.RequestFactory.noisy=0
     solar_factory.connect('http://kidgo.com.ua:8080/DeviceHiveJava/rest')
     reactor.run()
