@@ -171,9 +171,9 @@ class SolarApp(object):
             finished.callback(devicehive.CommandResult('Completed'))
             return
         if command.command == 'setOutputSource':
-            print "Setting source",command.parameters['source']
-            res = setOutputSource(command.parameters['source'])
-            #finished.callback(devicehive.CommandResult(res))
+            src = int(command.parameters['source'])
+            res = setOutputSource("%.2d" % src)
+            finished.callback(devicehive.CommandResult(res))
             return
 
         finished.errback(NotImplementedError('Unknown command {0}.'.format(command.command)))
