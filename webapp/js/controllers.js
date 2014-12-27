@@ -69,7 +69,8 @@ var MainCtrl = function($scope) {
     $scope.pvVoltage="init";
     $scope.pvCurrent="init";
 
-
+    $scope.login = ""
+    $scope.password = ""
 
 
     $scope.updateDeviceInfo = function () {
@@ -251,24 +252,26 @@ var MainCtrl = function($scope) {
 
     }
 
-    $scope.setConnection = function () {
+    $scope.setConnection = function (log,pass) {
 
-        if (($scope.login == undefined) && ($scope.passowrd == undefined)) {
+        if ((log == undefined) && (pass == undefined)) {
             $scope.login = window.localStorage.getItem("login")
             $scope.password = window.localStorage.getItem("password")
         } else {
+            $scope.login = log;
+            $scope.password = pass;
             window.localStorage.setItem("login",$scope.login)
             window.localStorage.setItem("password",$scope.password)
         }
 
         if (($scope.login != undefined) && ($scope.password != undefined))  {
-            $scope.login_not_done = undefined;
+
 
             $scope.deviceHive = new DeviceHive("http://kidgo.com.ua:8080/DeviceHiveJava/rest", $scope.login, $scope.password);
 
             $scope.deviceHive.getDevice("E50D6085-2ABA-48E9-B1C3-73C673E414B1").done(function (result) {
 
-
+                $scope.login_not_done = undefined;
                 $scope.device = result
                 console.log("Device found")
                 $scope.subscribe()
@@ -281,6 +284,7 @@ var MainCtrl = function($scope) {
 
             }).fail(function() {
                 console.log("device not found");
+                $scope.login_not_done = "enter login";
                 $scope.$apply();
 
             }); // get devices
