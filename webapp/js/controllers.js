@@ -256,7 +256,7 @@ var MainCtrl = function($scope) {
 
     }
     $scope.sendRefresh = function () {
-        result = $scope.deviceHive.sendCommand($scope.device, "refresh", {})
+        result = $scope.deviceHive.sendCommand($scope.device.id, "refresh", {})
         result.result(function(res) {
             console.log(res);
         });
