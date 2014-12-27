@@ -77,6 +77,13 @@ def query_mode():
 
 def query_settings():
 	def finish_cb(data):
+		vars = data.split(" ")
+
+		outputSource = vars[16];
+        chargeSource = vars[17];
+
+        print outputSoruce,chargeSource
+
 		return data[0]
 	return query_command("QPIRI",finish_cb);
 
