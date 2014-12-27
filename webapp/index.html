@@ -108,13 +108,13 @@
     </div>
 
 
-    <div style="clear: both;">
+    <div style="clear: both;" class="col-md-6">
 
         <h1>Рабочие параметры</h1>
 
         <table class="table table-striped">
             <tr>
-                <th class="tg-031e">Ремим</th>
+                <th class="tg-031e">Режим</th>
                 <th class="tg-031e">Значение</th>
             </tr>
             <tr>
@@ -129,6 +129,43 @@
                 <td class="tg-031e">Тип нагрузки</td>
                 <td class="tg-031e">{{loadSource}}</td>
             </tr>
+
+        </table>
+
+    </div>
+
+
+    <div class="col-md-12">
+
+        <h1>Настройки</h1>
+
+        <table class="table table-striped">
+            <tr>
+                <th class="tg-031e">Парметр</th>
+                <th class="tg-031e">Значение</th>
+            </tr>
+            <tr>
+                <td class="tg-031e">Приоритет зарядки</td>
+                <td class="tg-031e">
+                    <div class="btn-group">
+                        <label class="btn btn-primary" ng-model="chargePri" btn-radio="'Utility'"  >Сеть</label>
+                        <label class="btn btn-primary" ng-model="chargePri" btn-radio="'Solar first'">Cначала солнце</label>
+                        <label class="btn btn-primary" ng-model="chargePri" btn-radio="'Utility and Solar'">Солнце и сеть</label>
+                        <label class="btn btn-primary" ng-model="chargePri" btn-radio="'Solar only'">Только солнце</label>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="tg-031e">Приоритет питания нагрузки </td>
+                <td class="tg-031e">
+                    <div class="btn-group">
+                        <label class="btn btn-primary" ng-model="loadPri" btn-radio="'Utility'">Сеть</label>
+                        <label class="btn btn-primary" ng-model="loadPri" btn-radio="'Solar'">Инвертор</label>
+                        <label class="btn btn-primary" ng-model="loadPri" btn-radio="'SBU'">Солн-Бат-Сеть</label>
+                    </div>
+                </td>
+            </tr>
+
 
         </table>
 

@@ -2,6 +2,21 @@
 function WorkInfo() {
 
 }
+
+outputModes = {
+    'Utility': '00',
+     'Solar': '01',
+     'SBU': '02',
+}
+chargeSources = {
+    'Utility':00,
+    'Solar first':01,
+    'Utility and Solar':02,
+    'Solar only':03
+}
+
+
+
 WorkInfo.prototype = {
     setCustomerV: function (v) {
         this.v = v;

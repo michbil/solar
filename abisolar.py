@@ -75,7 +75,10 @@ def query_mode():
 		return data[0]
 	return query_command("QMOD",finish_cb);
 
-
+def query_settings():
+	def finish_cb(data):
+		return data[0]
+	return query_command("QPIRI",finish_cb);
 
 def query_params():
 
@@ -117,4 +120,5 @@ def query_params():
 if __name__ == "__main__":
 	print query_mode()
 	print query_params()
+	print query_settings()
 	print "CRC =", crc("QPIGS")
