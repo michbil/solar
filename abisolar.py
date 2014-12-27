@@ -91,7 +91,7 @@ def query_settings():
 
 def setOutputSource(val):
     def finish_cb(data):
-        return data[0]
+        return (data[:3] == 'ACK')
     return query_command("POP"+val,finish_cb);
 
 def query_params():
@@ -135,4 +135,4 @@ if __name__ == "__main__":
     print query_mode()
     print query_params()
     print query_settings()
-    print setOutputSource("00")
+    print setOutputSource("01")
