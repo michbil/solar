@@ -172,8 +172,8 @@ class SolarApp(object):
             return
         if command.command == 'setOutputSource':
             print "Setting source",command.parameters['source']
-            res = setOutputSource(command.parameters['source']);
-            finished.callback(devicehive.CommandResult(res))
+            res = setOutputSource(command.parameters['source'])
+            #finished.callback(devicehive.CommandResult(res))
             return
 
         finished.errback(NotImplementedError('Unknown command {0}.'.format(command.command)))
