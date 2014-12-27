@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en" ng-app="hex">
+<head>
+    <meta charset="UTF-8">
+    <title>PV battery monitor</title>
+    <link href="//fonts.googleapis.com/css?family=Droid+Sans Mono:400" rel="stylesheet" type="text/css">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/angular-ui-tree.min.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+</head>
+<body ng-controller="main">
+
+
+
+
+<nav class="navbar navbar-inverse navbar-default nav-padless" role="navigation">
+    <div>
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">WebCalc</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="#about">About</a></li>
+
+
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+
+<div class="container">
+
+
+
+        <form class="form-signin" ng-if="login_not_done">
+            <h2 class="form-signin-heading">Please sign in</h2>
+            <label for="inputEmail" class="sr-only"">Email address</label>
+            <input id="inputEmail" class="form-control" placeholder="Email address" required autofocus ng-model="login">
+            <label for="inputPassword" class="sr-only">Password</label>
+            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required  ng-model="password">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" value="remember-me"> Remember me
+                </label>
+            </div>
+            <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="setConnection();">Sign in</button>
+        </form>
+
+
+
+
+    <div class="centerimg">
+        <img src="img/bg1.png">
+        <div class="floatparams">V=<span class="red">{{pvVoltage}}В</span> I=<span class="blue">{{pvCurrent}}А</span> <br>P= <span class="green">{{pvVoltage*pvCurrent}}Вт</span></div>
+        <div class="floatparams2"><span class="red">{{gridVoltage}}В</span>@<span class="blue">{{gridFrequency}}Гц</span></div>
+        <div class="floatparams3">
+            <p ng-if="chargingCurrent > 0">Заряд</p>
+            <p ng-if="batDischargeCurrent > 0">Разряд </p>
+            <span class="red">{{batteryVoltage}}В</span>@<span class="blue">{{chargingCurrent+batDischargeCurrent}}А</span>
+        </div>
+    </div>
+
+    <div class="rightsection">
+        <div class="input-group"><span class="input-group-addon" id="sizing-addon2">Активная мощность</span>{{outputActivePower}}Вт</div>
+        <div class="input-group"><span class="input-group-addon" id="sizing-addon2">Общая мощность</span>{{outputApparentPower}}Вт</div>
+        <div class="input-group"><span class="input-group-addon" id="sizing-addon2">Коеффициент мощности</span>{{(outputActivePower / outputApparentPower).toPrecision(2)}}</div>
+        <div class="input-group"><span class="input-group-addon" id="sizing-addon2">Нагрузка</span>{{batteryVoltage}}%</div>
+        <div class="input-group"><span class="input-group-addon" id="sizing-addon2">Напряжение выход</span> {{outputVoltage}}В</div>
+        <div class="input-group"><span class="input-group-addon" id="sizing-addon2">Частота выход </span>{{outputFrequency}}Гц</div>
+
+
+    </div>
+
+
+    <div style="clear: both;">
+       <p>Режим работы: {{workMode}}</p>
+        <p>{{chargeSource}} {{loadSource}}</p>
+
+    </div>
+
+</div>
+
+
+
+    <script src="lib/jquery-1.11.1.js"></script>
+    <script src="lib/jquery.mousewheel.js"></script>
+    <script src="lib/bootstrap.min.js"></script>
+    <script src="lib/devicehive.js"></script>
+    <script src="lib/angular.min.js"></script>
+    <script src="lib/angular-ui-tree.js"></script>
+    <script src="lib/ui-bootstrap-tpls-0.12.0.js"></script>
+    <script src='lib/scalyr.js'></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="lib/localforage.js"></script>
+    <script src="js/directives.js"></script>
+    <script src="js/controllers.js"></script>
+
+<!--    <script src="js/calc_eval.js"></script> -->
+
+</body>
+</html>

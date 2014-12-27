@@ -1,0 +1,80 @@
+
+.input-group {
+    margin: 5px;
+    width: 250px;
+    border: solid #333 1px;
+    border-radius: 5px;
+    overflow: hidden;
+    text-align: right;
+}
+.input-group-addon {
+    width: 190px;
+    text-align: left;
+}
+.maincol {
+    width: auto;
+}
+.bgcol {
+    width: auto;
+    height: auto;
+
+}
+
+.topsection {
+    clear:both;
+    margin: 0 auto;
+    width: 50%;
+}
+
+.leftsection {
+    float:left;
+
+}
+
+.centerimg {
+    float:left;
+    position: relative;
+}
+
+.rightsection {
+    float:left;
+
+}
+
+.bottomsection {
+    clear:both;
+    float:left;
+    margin: 0px auto;
+    width: 50%;
+
+}
+.floatparams {
+    position: absolute;
+    top: 20px;
+    left:10px;
+    font-size:medium;
+}
+.floatparams2 {
+    position: absolute;
+    top: 25px;
+    left:270px;
+    font-size:medium;
+}
+.floatparams3 {
+    position: absolute;
+    bottom: 20px;
+    left:270px;
+    font-size:medium;
+}
+.red {
+    color:red;
+}
+.blue {
+    color:blue;
+}
+.green {
+    color:green;
+}
+p {
+    margin-bottom:0px;
+}
