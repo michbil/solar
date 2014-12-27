@@ -18,7 +18,7 @@ import devicehive.device.ws
 import devicehive.interfaces
 import threading
 
-from abisolar import query_params,query_mode,query_settings
+from abisolar import *
 
 
 class SolarInfo(object):
@@ -147,8 +147,15 @@ class SolarApp(object):
         if command.command == 'refresh':
             self.status_notify();
             finished.callback(devicehive.CommandResult('Completed'))
-        else :
-            finished.errback(NotImplementedError('Unknown command {0}.'.format(command.command)))
+            return
+        if command.command == 'setOutputSource':
+            res = setOutputSource(command.parameters.source);
+            if (res):
+                finished.callback(devicehive.CommandResult('ACK'))
+            else:
+                finished.callback(devicehive.CommandResult('NACK'))
+
+        finished.errback(NotImplementedError('Unknown command {0}.'.format(command.command)))
     
 
     def status_notify(self):
