@@ -146,6 +146,7 @@ var MainCtrl = function($scope) {
 
 
              }
+         $scope.$apply()
 
 
      }
@@ -170,7 +171,7 @@ var MainCtrl = function($scope) {
         }
         var ch2 = deviceStatus.charAt(2);
         if (ch2 == '1') {
-            queryMachineInfo();
+            //queryMachineInfo();
         }
         var ch3 = deviceStatus.charAt(3);
         if (ch3 == '1') {
@@ -252,6 +253,13 @@ var MainCtrl = function($scope) {
         $scope.getEq();
         $scope.subscribeNotifications();
 
+
+    }
+    $scope.sendRefresh = function () {
+        result = $scope.deviceHive.sendCommand($scope.device, "refresh", {})
+        result.result(function(res) {
+            console.log(res);
+        });
 
     }
 
