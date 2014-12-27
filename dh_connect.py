@@ -84,6 +84,7 @@ class SolarInfo(object):
 
                 devicehive.Equipment(name = 'deviceStatus', code = 'STATUS', type = 'MODE'),
                 devicehive.Equipment(name = 'workMode', code = 'MODE', type = 'MODE'),
+                devicehive.Equipment(name = 'settings', code = 'SETT', type = 'SETTINGS'),
 
 
 
@@ -175,7 +176,7 @@ class SolarApp(object):
 
             self.factory.notify('equipment',   {'equipment': 'BAT_DISCH_CURR', 'state': params["batDischargeCurrent"]},     self.info.id, self.info.key)
             self.factory.notify('equipment',   {'equipment': 'STATUS', 'state': params["deviceStatus"]},     self.info.id, self.info.key)
-            self.factory.notify('equipment',   {'equipment': 'Settings', 'state': settings},     self.info.id, self.info.key)
+            self.factory.notify('equipment',   {'equipment': 'SETT', 'state': settings},     self.info.id, self.info.key)
 
 
 
