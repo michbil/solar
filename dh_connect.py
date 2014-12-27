@@ -176,6 +176,8 @@ class SolarApp(object):
 
             finished.callback(devicehive.CommandResult(res))
 
+            return
+
         finished.errback(NotImplementedError('Unknown command {0}.'.format(command.command)))
     
 
