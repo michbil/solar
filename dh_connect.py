@@ -174,7 +174,7 @@ class SolarApp(object):
            # import pudb; pu.db
             res = setOutputSource(command.parameters['source']);
 
-            finished.callback(devicehive.CommandResult(res)
+            finished.callback(devicehive.CommandResult(res))
 
         finished.errback(NotImplementedError('Unknown command {0}.'.format(command.command)))
     
