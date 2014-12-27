@@ -112,8 +112,7 @@ class SolarApp(object):
         self.factory = None
         self.info = SolarInfo(config)
         self.connected = False
-        self.led_state = 0
-    
+
     def on_apimeta(self, websocket_server, server_time):
         pass
     
@@ -149,10 +148,6 @@ class SolarApp(object):
         else :
             finished.errback(NotImplementedError('Unknown command {0}.'.format(command.command)))
     
-    def do_update_led_state(self, finish_deferred, equipment = None, state = 0):
-
-        self.status_notify()
-        finish_deferred.callback(devicehive.CommandResult('Completed'))
 
     def status_notify(self):
         line_mode = query_mode();
@@ -197,5 +192,6 @@ if __name__ == '__main__':
     solar.status_notify()
     # Connect to device-hive
     # solar_factory.connect('ws://pg.devicehive.com:8010')
+    devicehive.poll.RequestFactory.noisy=0
     solar_factory.connect('http://kidgo.com.ua:8080/DeviceHiveJava/rest')
     reactor.run()
