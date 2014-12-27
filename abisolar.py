@@ -1,7 +1,7 @@
 import serial
 import time
 
-ser = serial.Serial(port="COM1",baudrate=2400)
+ser = serial.Serial(port="/dev/ttyAMA0",baudrate=2400)
 
 POLYNOMIAL = 0x1021
 PRESET = 0
