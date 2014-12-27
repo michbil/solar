@@ -127,7 +127,7 @@ class SolarApp(object):
         pass
 
     def timer_func(self):
-        threading.Timer(2.0,self.timer_func).start();
+        threading.Timer(5.0,self.timer_func).start();
         self.status_notify()
 
     def on_connected(self):
