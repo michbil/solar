@@ -149,7 +149,7 @@ class SolarApp(object):
             finished.callback(devicehive.CommandResult('Completed'))
             return
         if command.command == 'setOutputSource':
-            res = setOutputSource(command.parameters.source);
+            res = setOutputSource(command.parameters['source']);
             if (res):
                 finished.callback(devicehive.CommandResult('ACK'))
             else:
