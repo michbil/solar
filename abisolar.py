@@ -61,6 +61,7 @@ def query_command(cmdname,cb):
         return out
 
     ser.write(cmdname+crc(cmdname)+"\x0d");
+    time.sleep(0.2);
     data = ""
     while (1):
         time.sleep(0.001)
