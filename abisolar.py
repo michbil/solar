@@ -73,8 +73,10 @@ def query_command(cmdname,cb):
                 print "recv finish:"+payload
                 return cb(payload[1:])
             else:
+                print "CRC fail"
                 return None
         else:
+            print "Short packet"
             return None
 
 
