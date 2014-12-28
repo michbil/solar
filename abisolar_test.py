@@ -30,6 +30,6 @@ class SerialEmu:
 
         self.string = result
 
-seremu = SerialEmu()
-
-init_test_with(seremu)
+if __name__ == "__main__":
+    seremu = SerialEmu()
+    init_test_with(seremu)

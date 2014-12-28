@@ -45,8 +45,18 @@ def crc(str):
         crc = _update_crc(crc, ord(c))
 
 
-    chr1 = chr(crc>>8)
-    chr2 = chr(crc&0xFF)
+    chr1 = crc>>8
+    chr2 = crc&0xFF
+
+    if (chr1 == 40) or (chr1 == 13) or (chr1 == 10):
+        chr1 = chr1 + 1
+
+    if (chr2 == 40) or (chr2 == 13) or (chr2 == 10):
+        chr2 = chr2 + 1
+
+    chr1 = chr(chr1>>8)
+    chr2 = chr(chr2&0xFF)
+
     return chr1+chr2
 
 def crcb(*i):
@@ -57,12 +67,27 @@ def crcb(*i):
 
     return crc
 
+def readline():
+
+    result = ""
+    while (1):
+        time.sleep(0.001)
+        count = ser.inWaiting();
+        if (count > 0):
+            rd = ser.read()
+            for c in rd:
+                result = result + c
+                if ord(c) == 13:
+                    return result
+
+
+
 def query_command(cmdname,cb):
 
     ser.write(cmdname+crc(cmdname)+"\x0d");
     time.sleep(0.2);
     while (1):
-        data = ser.readline()
+        data = readline()
         l = len(data)
 
         if (l > 4):
