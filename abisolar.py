@@ -78,6 +78,7 @@ def readline():
             for c in rd:
                 result = result + c
                 if ord(c) == 13:
+                    print "GOT RESPONSE",result
                     return result
 
 
