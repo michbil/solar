@@ -9,6 +9,10 @@ def init_test():
     global ser
     ser = {}
 
+def init_test_with(serial_obj):
+    global ser
+    ser = serial_obj
+
 POLYNOMIAL = 0x1021
 PRESET = 0
 
@@ -39,7 +43,11 @@ def crc(str):
     crc = PRESET
     for c in str:
         crc = _update_crc(crc, ord(c))
-    return chr(crc>>8)+chr(crc&0xFF)
+
+
+    chr1 = chr(crc>>8)
+    chr2 = chr(crc&0xFF)
+    return chr1+chr2
 
 def crcb(*i):
     crc = PRESET
@@ -51,31 +59,26 @@ def crcb(*i):
 
 def query_command(cmdname,cb):
 
-    def dbprint(line):
-        out = ""
-        for c in line:
-            if (ord(c) >= 32) and (ord(c) < 127):
-                out = out + c
-            else:
-                out = out + " 0x"+format(ord(c),"02x")
-        return out
-
     ser.write(cmdname+crc(cmdname)+"\x0d");
     time.sleep(0.2);
-    data = ""
     while (1):
-        time.sleep(0.001)
-        count = ser.inWaiting();
-        if (count > 0):
-            rd = ser.read()
+        data = ser.readline()
+        l = len(data)
 
-            data = data + rd
-            finish_flag = 0;
-            for c in data:
-                if ord(c) == 13:
-                    data = data[1:];
-                    print "recv finish:"+dbprint(data)
-                    return cb(data)
+        if (l > 4):
+            payload = data[0:len(data)-3];
+            checksum = data[len(data)-3:len(data)-1]
+            pcrc = crc(payload)
+            if (checksum == pcrc):
+                print "recv finish:"+payload
+                return cb(payload[1:])
+            else:
+                return None
+        else:
+            return None
+
+
+
 
 
 def query_mode():

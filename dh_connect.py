@@ -22,23 +22,11 @@ import sys
 import abisolar
 from abisolar import *
 
-def query_command_testing(cmdname,cb):
-    result = 'NAK'
-    if cmdname == "QMOD":
-        result = 'L'
-    if cmdname == "QPIRI":
-        result = '230.0 04.3 230.0 50.0 04.3 1000 0800 12.0 11.8 10.5 14.1 13.5 0 20 50 0 1 2 - 01 1 0 14.0 0 0 0xbbJ 0x0'
-    if cmdname == "QPIGS":
-        result =  '234.0 50.0 234.0 50.0 0070 0032 007 422 13.49 00 100 0522 0000 000.1 13.50 00000 10111101 22 03 00000 100 0xda 0xd6 0x0d'
-        result =  '234.0 50.0 234.0 50.0 0070 0032 007 000.1 13.50 00000 10111101 22 03 00000 100'
-    if cmdname[:3] == 'POP':
-        result = 'ACK'
-    print result
-    return cb(result);
 
 if sys.platform == 'darwin':
-    init_test()
-    abisolar.query_command = query_command_testing;
+    from abisolar_test import SerialEmu
+    seremu = SerialEmu()
+    init_test_with(seremu)
 
 else:
     init()
@@ -195,27 +183,32 @@ class SolarApp(object):
             params = query_params();
             settings = query_settings()
             if self.connected :
-                self.factory.notify('equipment',   {'equipment': 'MODE', 'state': line_mode},     self.info.id, self.info.key)
-                self.factory.notify('equipment',   {'equipment': 'PVV', 'state': params["pvInputVoltage1"]},     self.info.id, self.info.key)
-                self.factory.notify('equipment',   {'equipment': 'PVP', 'state': params["pvInputPower1"]},     self.info.id, self.info.key)
-                self.factory.notify('equipment',   {'equipment': 'PVC', 'state': params["pvInputCurrent"]},     self.info.id, self.info.key)
-                self.factory.notify('equipment',   {'equipment': 'BV', 'state':  params["pBatteryVoltage"]},     self.info.id, self.info.key)
+                if line_mode:
+                    self.factory.notify('equipment',   {'equipment': 'MODE', 'state': line_mode},     self.info.id, self.info.key)
 
-                self.factory.notify('equipment',   {'equipment': 'GRV', 'state': params["gridVoltageR"]},     self.info.id, self.info.key)
-                self.factory.notify('equipment',   {'equipment': 'GRF', 'state': params["gridFrequency"]},     self.info.id, self.info.key)
-                self.factory.notify('equipment',   {'equipment': 'OUV', 'state': params["acOutputVoltageR"]},     self.info.id, self.info.key)
-                self.factory.notify('equipment',   {'equipment': 'OUF', 'state':  params["acOutputFrequency"]},     self.info.id, self.info.key)
-                self.factory.notify('equipment',   {'equipment': 'OAPP', 'state': params["acOutputApparentPower"]},     self.info.id, self.info.key)
-                self.factory.notify('equipment',   {'equipment': 'ACTP', 'state':  params["acOutputActivePower"]},     self.info.id, self.info.key)
+                if params:
+                    self.factory.notify('equipment',   {'equipment': 'PVV', 'state': params["pvInputVoltage1"]},     self.info.id, self.info.key)
+                    self.factory.notify('equipment',   {'equipment': 'PVP', 'state': params["pvInputPower1"]},     self.info.id, self.info.key)
+                    self.factory.notify('equipment',   {'equipment': 'PVC', 'state': params["pvInputCurrent"]},     self.info.id, self.info.key)
+                    self.factory.notify('equipment',   {'equipment': 'BV', 'state':  params["pBatteryVoltage"]},     self.info.id, self.info.key)
 
-                self.factory.notify('equipment',   {'equipment': 'LOAD', 'state': params["outputLoadPercent"]},     self.info.id, self.info.key)
-                self.factory.notify('equipment',   {'equipment': 'BUSV', 'state': params["pBusVoltage"]},     self.info.id, self.info.key)
-                self.factory.notify('equipment',   {'equipment': 'CHRG_CUR', 'state': params["chargingCurrent"]},     self.info.id, self.info.key)
-                self.factory.notify('equipment',   {'equipment': 'BAT_CAP', 'state':  params["batteryCapacity"]},     self.info.id, self.info.key)
+                    self.factory.notify('equipment',   {'equipment': 'GRV', 'state': params["gridVoltageR"]},     self.info.id, self.info.key)
+                    self.factory.notify('equipment',   {'equipment': 'GRF', 'state': params["gridFrequency"]},     self.info.id, self.info.key)
+                    self.factory.notify('equipment',   {'equipment': 'OUV', 'state': params["acOutputVoltageR"]},     self.info.id, self.info.key)
+                    self.factory.notify('equipment',   {'equipment': 'OUF', 'state':  params["acOutputFrequency"]},     self.info.id, self.info.key)
+                    self.factory.notify('equipment',   {'equipment': 'OAPP', 'state': params["acOutputApparentPower"]},     self.info.id, self.info.key)
+                    self.factory.notify('equipment',   {'equipment': 'ACTP', 'state':  params["acOutputActivePower"]},     self.info.id, self.info.key)
 
-                self.factory.notify('equipment',   {'equipment': 'BAT_DISCH_CURR', 'state': params["batDischargeCurrent"]},     self.info.id, self.info.key)
-                self.factory.notify('equipment',   {'equipment': 'STATUS', 'state': params["deviceStatus"]},     self.info.id, self.info.key)
-                self.factory.notify('equipment',   {'equipment': 'SETT', 'state': settings},     self.info.id, self.info.key)
+                    self.factory.notify('equipment',   {'equipment': 'LOAD', 'state': params["outputLoadPercent"]},     self.info.id, self.info.key)
+                    self.factory.notify('equipment',   {'equipment': 'BUSV', 'state': params["pBusVoltage"]},     self.info.id, self.info.key)
+                    self.factory.notify('equipment',   {'equipment': 'CHRG_CUR', 'state': params["chargingCurrent"]},     self.info.id, self.info.key)
+                    self.factory.notify('equipment',   {'equipment': 'BAT_CAP', 'state':  params["batteryCapacity"]},     self.info.id, self.info.key)
+
+                    self.factory.notify('equipment',   {'equipment': 'BAT_DISCH_CURR', 'state': params["batDischargeCurrent"]},     self.info.id, self.info.key)
+                    self.factory.notify('equipment',   {'equipment': 'STATUS', 'state': params["deviceStatus"]},     self.info.id, self.info.key)
+
+                if settings:
+                    self.factory.notify('equipment',   {'equipment': 'SETT', 'state': settings},     self.info.id, self.info.key)
         except Exception as e:
             print 'Caught exeception while status-notify'
             print e
