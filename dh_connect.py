@@ -171,7 +171,12 @@ class SolarApp(object):
             finished.callback(devicehive.CommandResult('Completed'))
             return
         if command.command == 'setOutputSource':
-            src = int(command.parameters['source'])
+            try:
+                src = int(command.parameters['source'])
+            except ValueError,e:
+                finished.errback(NotImplementedError('wrong parameter'))
+                return
+
             res = setOutputSource("%.2d" % src)
             finished.callback(devicehive.CommandResult(res))
             settings = query_settings()
