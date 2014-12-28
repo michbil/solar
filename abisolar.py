@@ -54,7 +54,7 @@ def crc(str):
     if (chr2 == 40) or (chr2 == 13) or (chr2 == 10):
         chr2 = chr2 + 1
 
-    chr1 = chr(chr1>>8)
+    chr1 = chr(chr1&0xFF)
     chr2 = chr(chr2&0xFF)
 
     return chr1+chr2
@@ -66,6 +66,12 @@ def crcb(*i):
 
 
     return crc
+
+def dbprint(line):
+        out = ""
+        for c in line:
+            out = out + format(ord(c),"02x")
+        return out
 
 def readline():
 

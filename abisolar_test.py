@@ -3,6 +3,8 @@ import serial
 
 #ser = serial.Serial(port='/dev/tty')
 
+
+
 class SerialEmu:
     def setEmuString(self,str):
         self.string = str
@@ -33,3 +35,5 @@ class SerialEmu:
 if __name__ == "__main__":
     seremu = SerialEmu()
     init_test_with(seremu)
+
+    print dbprint(crc('(NAK'))
