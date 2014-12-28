@@ -148,6 +148,8 @@ def query_params():
     return query_command("QPIGS",finish_p);
 
 if __name__ == "__main__":
+    init()
+
     print query_mode()
     print query_params()
     print query_settings()
