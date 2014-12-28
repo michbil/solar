@@ -140,13 +140,13 @@ class SolarApp(object):
         pass
     
     def on_closing_connection(self):
-        pass
+        reactor.stop()
     
     def on_connection_failed(self, reason):
-        pass
+        reactor.stop()
     
     def on_failure(self, device_id, reason):
-        pass
+        reactor.stop()
 
     def timer_func(self):
         threading.Timer(60.0,self.timer_func).start();
