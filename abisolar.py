@@ -1,9 +1,13 @@
 import serial
 import time
+import sys
 
 def init():
     global ser
-    ser = serial.Serial(port="/dev/ttyAMA0",baudrate=2400)
+    if sys.platform == 'win32':
+        ser = serial.Serial(port="COM1",baudrate=2400)
+    else:
+        ser = serial.Serial(port="/dev/ttyAMA0",baudrate=2400)
 
 def init_test():
     global ser
