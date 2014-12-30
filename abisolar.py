@@ -89,6 +89,7 @@ def readline():
                 result = result + c
                 if ord(c) == 13:
                     print "GOT RESPONSE",result
+                    ser.flushInput()
                     return result
 
 
