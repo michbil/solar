@@ -101,24 +101,24 @@ def query_command(cmdname,cb):
 
     ser.write(cmdname+crc(cmdname)+"\x0d");
     time.sleep(0.2);
-    while (1):
-        data = ser.readline()
-        print data
-        l = len(data)
 
-        if (l > 4):
-            payload = data[0:len(data)-3];
-            checksum = data[len(data)-3:len(data)-1]
-            pcrc = crc(payload)
-            if (checksum == pcrc):
-                print "recv finish:"+payload
-                return cb(payload[1:])
-            else:
-                print "CRC fail"
-                return None
+    data = ser.readline()
+    print "Got data: "+data
+    l = len(data)
+
+    if (l > 4):
+        payload = data[0:len(data)-3];
+        checksum = data[len(data)-3:len(data)-1]
+        pcrc = crc(payload)
+        if (checksum == pcrc):
+            print "recv finish:"+payload
+            return cb(payload[1:])
         else:
-            print "Short packet"
+            print "CRC fail"
             return None
+    else:
+        print "Short packet"
+        return None
 
 
 
