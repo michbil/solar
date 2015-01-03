@@ -196,8 +196,11 @@ def query_params():
 
 if __name__ == "__main__":
     init()
-
+    print "Checking query_mode command...."
     print query_mode()
+    print "Checking query_params command...."
     print query_params()
+    print "Checking query_settings command...."
     print query_settings()
+    print "Checking set output source command...."
     print setOutputSource("01")
