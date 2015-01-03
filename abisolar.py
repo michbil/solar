@@ -103,6 +103,7 @@ def query_command(cmdname,cb):
     time.sleep(0.2);
     while (1):
         data = ser.readline()
+        print data
         l = len(data)
 
         if (l > 4):
