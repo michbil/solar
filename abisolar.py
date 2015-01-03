@@ -1,13 +1,16 @@
 import serial
 import time
 import sys
+import io
 
 def init():
     global ser
     if sys.platform == 'win32':
-        ser = serial.Serial(port="COM1",baudrate=2400,timeout=5.0)
+        comport = 'COM1'
     else:
-        ser = serial.Serial(port="/dev/ttyAMA0",baudrate=2400,timeout=5.0)
+        comport = "/dev/ttyAMA0"
+    serial = serial.Serial(port=comport,baudrate=2400,timeout=5.0)
+    ser = io.TextIOWrapper(io.BufferedRWPair(serial, serial), newline='\r')
 
 def init_test():
     global ser
