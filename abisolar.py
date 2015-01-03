@@ -9,8 +9,8 @@ def init():
         comport = 'COM1'
     else:
         comport = "/dev/ttyAMA0"
-    port = serial.Serial(port=comport,baudrate=2400,timeout=5.0)
-    ser = io.TextIOWrapper(io.BufferedRWPair(port, port), newline='\r')
+    ser = serial.Serial(port=comport,baudrate=2400,timeout=5.0)
+
 
 def init_test():
     global ser
@@ -82,10 +82,12 @@ def dbprint(line):
 
 def readline():
 
+    now = time.time()
+
     if "inWaiting" in dir(ser):
         result = ""
-        while (1):
-            time.sleep(0.001)
+        while (time.time()-now) > 5.0:
+            time.sleep(0.1)
             count = ser.inWaiting();
             if (count > 0):
                 rd = ser.read()
@@ -95,6 +97,8 @@ def readline():
                         print "GOT RESPONSE",result
                         ser.flushInput()
                         return result
+        print "Timeout triggered"
+        return None
     else:
         return ser.readline()
 
@@ -105,8 +109,11 @@ def query_command(cmdname,cb):
     ser.write(cmdname+crc(cmdname)+"\x0d");
     time.sleep(0.2);
 
-    data = ser.readline()
-    print "Got data: "+data
+    data = readline()
+
+    if data is None:
+        return None
+
     l = len(data)
 
     if (l > 4):
