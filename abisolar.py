@@ -9,8 +9,8 @@ def init():
         comport = 'COM1'
     else:
         comport = "/dev/ttyAMA0"
-    serial = serial.Serial(port=comport,baudrate=2400,timeout=5.0)
-    ser = io.TextIOWrapper(io.BufferedRWPair(serial, serial), newline='\r')
+    port = serial.Serial(port=comport,baudrate=2400,timeout=5.0)
+    ser = io.TextIOWrapper(io.BufferedRWPair(port, port), newline='\r')
 
 def init_test():
     global ser
