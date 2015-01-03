@@ -129,12 +129,15 @@ class SolarApp(object):
         pass
     
     def on_closing_connection(self):
+        print "Closing connection, Finishing reactor"
         reactor.stop()
     
     def on_connection_failed(self, reason):
+        print "Connection,failed. Finishing reactor"
         reactor.stop()
     
     def on_failure(self, device_id, reason):
+        print "Failure, Finishing reactor"
         reactor.stop()
 
     def timer_func(self):

@@ -6,6 +6,8 @@ import serial
 
 
 class SerialEmu:
+
+
     def setEmuString(self,str):
         self.string = str
 

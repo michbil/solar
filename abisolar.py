@@ -5,9 +5,9 @@ import sys
 def init():
     global ser
     if sys.platform == 'win32':
-        ser = serial.Serial(port="COM1",baudrate=2400)
+        ser = serial.Serial(port="COM1",baudrate=2400,timeout=5.0)
     else:
-        ser = serial.Serial(port="/dev/ttyAMA0",baudrate=2400)
+        ser = serial.Serial(port="/dev/ttyAMA0",baudrate=2400,timeout=5.0)
 
 def init_test():
     global ser
@@ -79,18 +79,21 @@ def dbprint(line):
 
 def readline():
 
-    result = ""
-    while (1):
-        time.sleep(0.001)
-        count = ser.inWaiting();
-        if (count > 0):
-            rd = ser.read()
-            for c in rd:
-                result = result + c
-                if ord(c) == 13:
-                    print "GOT RESPONSE",result
-                    ser.flushInput()
-                    return result
+    if "inWaiting" in dir(ser):
+        result = ""
+        while (1):
+            time.sleep(0.001)
+            count = ser.inWaiting();
+            if (count > 0):
+                rd = ser.read()
+                for c in rd:
+                    result = result + c
+                    if ord(c) == 13:
+                        print "GOT RESPONSE",result
+                        ser.flushInput()
+                        return result
+    else:
+        return ser.readline()
 
 
 
@@ -99,7 +102,7 @@ def query_command(cmdname,cb):
     ser.write(cmdname+crc(cmdname)+"\x0d");
     time.sleep(0.2);
     while (1):
-        data = readline()
+        data = ser.readline()
         l = len(data)
 
         if (l > 4):
