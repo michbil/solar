@@ -90,7 +90,7 @@ def readline():
             time.sleep(0.1)
             count = ser.inWaiting();
             if (count > 0):
-                rd = ser.read()
+                rd = ser.read(size=count)
                 for c in rd:
                     result = result + c
                     if ord(c) == 13:
