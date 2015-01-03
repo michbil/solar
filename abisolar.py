@@ -86,7 +86,7 @@ def readline():
 
     if "inWaiting" in dir(ser):
         result = ""
-        while (time.time()-now) > 5.0:
+        while (time.time()-now) < 5.0:
             time.sleep(0.1)
             count = ser.inWaiting();
             if (count > 0):
