@@ -217,7 +217,7 @@ class SolarApp(object):
                 self.factory.notify('equipment',   {'equipment': 'SETT', 'state': settings},     self.info.id, self.info.key)
         else:
             print "not connected, sorry"
-            reactor.stop()
+
 
 
 if __name__ == '__main__':
