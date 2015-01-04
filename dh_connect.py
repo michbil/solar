@@ -181,14 +181,15 @@ class SolarApp(object):
     
 
     def status_notify(self):
-        try:
-            line_mode = query_mode();
-            params = query_params();
-            settings = query_settings()
-        except Exception as e:
-            print 'Caught exeception while status-notify'
-            print e
         if self.connected :
+            try:
+                line_mode = query_mode();
+                params = query_params();
+                settings = query_settings()
+            except Exception as e:
+                print 'Caught exeception while status-notify'
+                print e
+                
             if line_mode:
                 self.factory.notify('equipment',   {'equipment': 'MODE', 'state': line_mode},     self.info.id, self.info.key)
 
