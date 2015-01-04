@@ -191,9 +191,11 @@ class SolarApp(object):
                 print e
 
             if line_mode:
+                print "Line mode got, sending notification"
                 self.factory.notify('equipment',   {'equipment': 'MODE', 'state': line_mode},     self.info.id, self.info.key)
 
             if params:
+                print "Params got, sending notification"
                 self.factory.notify('equipment',   {'equipment': 'PVV', 'state': params["pvInputVoltage1"]},     self.info.id, self.info.key)
                 self.factory.notify('equipment',   {'equipment': 'PVP', 'state': params["pvInputPower1"]},     self.info.id, self.info.key)
                 self.factory.notify('equipment',   {'equipment': 'PVC', 'state': params["pvInputCurrent"]},     self.info.id, self.info.key)
@@ -215,6 +217,7 @@ class SolarApp(object):
                 self.factory.notify('equipment',   {'equipment': 'STATUS', 'state': params["deviceStatus"]},     self.info.id, self.info.key)
 
             if settings:
+                print "Settings got, sending notification"
                 self.factory.notify('equipment',   {'equipment': 'SETT', 'state': settings},     self.info.id, self.info.key)
         else:
             print "not connected, sorry"
