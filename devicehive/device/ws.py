@@ -94,8 +94,7 @@ class WebSocketFactory(ClientFactory):
 
     def stopFactory(self):
         print "WS FACTORY STOPPING"
-        time.sleep(1);
-        self.handler.connect_ws() #dirty hack
+        print self.devices
 
 
     def buildProtocol(self, addr):
