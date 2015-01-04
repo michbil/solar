@@ -94,7 +94,7 @@ def readline():
                 for c in rd:
                     result = result + c
                     if ord(c) == 13:
-                        print "GOT RESPONSE",result
+                        #print "GOT RESPONSE",result
                         ser.flushInput()
                         return result
         print "Timeout triggered"
@@ -121,7 +121,7 @@ def query_command(cmdname,cb):
         checksum = data[len(data)-3:len(data)-1]
         pcrc = crc(payload)
         if (checksum == pcrc):
-            print "recv finish:"+payload
+            #print "recv finish:"+payload
             return cb(payload[1:])
         else:
             print "CRC fail"
