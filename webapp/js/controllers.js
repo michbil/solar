@@ -1,8 +1,4 @@
 
-function WorkInfo() {
-
-}
-
 outputModes = {
     'Utility': '00',
      'Solar': '01',
@@ -23,73 +19,10 @@ getKeyByValue = function( obj, value ) {
     }
 }
 
-
-WorkInfo.prototype = {
-    setCustomerV: function (v) {
-        this.v = v;
-    },
-    setHasLoad: function (v) {
-        this.load = v;
-    },
-    setChargeOn: function (v) {
-        this.charge = v;
-    },
-    setSCCvargeOn:function (v) {
-        this.ssccharge = v;
-    },
-    setACvargeOn:function (v) {
-        this.accharge = v;
-    },
-    setChargeSource: function (v) {
-        this.chargeSource = v;
-        console.log(this.chargeSource);
-    },
-    setLoadSource:function (v) {
-        this.loadSource = v;
-        console.log(this.loadSource);
-    },
-    isChargeOn:function (v) {
-        return this.charge;
-    },
-    isSCCvargeOn:function (v) {
-        return this.ssccharge;
-    },
-    isACvargeOn:function (v) {
-        return this.accharge;
-    },
-    isHasLoad:function (v) {
-        return this.load;
-    },
-    getWorkMode: function () {
-        return this.workMode;
-    },
-    decodeWorkMode: function (qmodStr) {
-        var workMode = "Standby Mode";
-        if (qmodStr=="P") {
-            workMode = "Power On Mode";
-        } else if (qmodStr=="S") {
-            workMode = "Standby Mode";
-        } else if (qmodStr=="L") {
-            workMode = "Line Mode";
-        } else if (qmodStr=="B") {
-            workMode = "Battery Mode";
-        } else if (qmodStr=="F") {
-            workMode = "Fault Mode";
-        } else if (qmodStr=="D") {
-            workMode = "Shutdown Mode";
-        }
-        this.workMode = workMode;
-        console.log(workMode);
-    }
-
-}
-workInfo = new WorkInfo()
-
-
 var MainCtrl = function($scope) {
 
-    $scope.pvVoltage="init";
-    $scope.pvCurrent="init";
+    $scope.pvVoltage="...";
+    $scope.pvCurrent="...";
 
     $scope.login = ""
     $scope.password = ""
@@ -284,8 +217,10 @@ var MainCtrl = function($scope) {
     }
     $scope.sendRefresh = function () {
         result = $scope.deviceHive.sendCommand($scope.device.id, "refresh", {})
+        $('.refreshajax').show();
         result.result(function(res) {
             console.log(res);
+            $('.refreshajax').hide();
         });
 
     }
