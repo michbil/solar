@@ -104,7 +104,7 @@ def readline():
 
 
 
-def query_command(cmdname,cb):
+def query_command_once(cmdname,cb):
 
     ser.write(cmdname+crc(cmdname)+"\x0d");
     time.sleep(0.2);
@@ -131,6 +131,16 @@ def query_command(cmdname,cb):
         return None
 
 
+def query_command(cmdname,cb):
+    res = None
+    for i in range(1,5):
+        res = query_command_once(cmdname,cb)
+        if res:
+            return res
+        print "Retry number",i
+        time.sleep(0.3)
+    print "No valid responce after retries"
+    return None
 
 
 
