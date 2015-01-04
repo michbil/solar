@@ -189,7 +189,7 @@ class SolarApp(object):
             except Exception as e:
                 print 'Caught exeception while status-notify'
                 print e
-                
+
             if line_mode:
                 self.factory.notify('equipment',   {'equipment': 'MODE', 'state': line_mode},     self.info.id, self.info.key)
 

@@ -26,6 +26,7 @@ var MainCtrl = function($scope) {
 
     $scope.login = ""
     $scope.password = ""
+    $scope.online = "..."
 
 
     $scope.updateDeviceInfo = function () {
@@ -46,8 +47,36 @@ var MainCtrl = function($scope) {
             .fail(that.handleError);
     }
 
+    // register time of last valid notification
+    function register_time (time) {
+        t = Date.parse(time);
+        oldstamp = $scope.timestamp;
+        if (oldstamp == undefined)  {
+            oldstamp = 0;
+        } else {
+            oldstamp = Date.parse(oldstamp)
+        }
+        if (oldstamp == undefined) oldstamp = 0;
+        if (t > oldstamp) {
+            $scope.timestamp=time;
+        }
+
+    }
+    function recalc_time () {
+
+        now = Date.now();
+        then = Date.parse($scope.timestamp);
+        var seconds = (now - then) / 1000;
+        console.log(formatTime(seconds));
+        $scope.online=formatTime(seconds);
+        $scope.$apply()
+
+
+    }
+
     // handles incoming notification
     $scope.handleNotification = function (deviceId, notification) {
+        register_time(notification.timestamp)
 
         if (notification.notification == "equipment") {
             decode_eq(notification.parameters.equipment,notification.parameters.state);
@@ -56,10 +85,11 @@ var MainCtrl = function($scope) {
             if (notification.parameters.status) this.device.status = notification.parameters.status;
             if (notification.parameters.name) this.device.name = notification.parameters.name;
             this.updateDeviceInfo(this.device);
+            recalc_time();
         }
     }
 
-
+    // decode incoming equipment codes
      function decode_eq(code,p) {
          console.log("Notification inconming "+code+" "+p)
              switch (code) {
@@ -101,7 +131,9 @@ var MainCtrl = function($scope) {
                      break;
                  case 'STATUS':
                      $scope.deviceStatus = p;
-                     decode_status(p);
+                     workInfo.decode_status(p);
+                     $scope.loadSource = workInfo.loadSource;
+                     $scope.chargeSource = workInfo.chargeSource;
                      break;
 
 
@@ -111,98 +143,26 @@ var MainCtrl = function($scope) {
 
      }
 
-    function decode_status(deviceStatus) {
-
-
-
-        var ch0 = deviceStatus.charAt(0);
-        if (ch0 == '1') {
-            workInfo.setCustomerV("1");
-        } else {
-            workInfo.setCustomerV("0");
-        }
-        var ch1 = deviceStatus.charAt(1);
-        if (ch1 == '1')
-        {
-//            getProtocol().setDelayChanging(true);
-//            queryMachineInfo();
-//            queryCapability();
-//            queryConfigData();
-        }
-        var ch2 = deviceStatus.charAt(2);
-        if (ch2 == '1') {
-            //queryMachineInfo();
-        }
-        var ch3 = deviceStatus.charAt(3);
-        if (ch3 == '1') {
-            workInfo.setHasLoad(true);
-        } else {
-            workInfo.setHasLoad(false);
-        }
-        var ch5 = deviceStatus.charAt(5);
-        if (ch5 == '1') {
-            workInfo.setChargeOn(true);
-        } else {
-            workInfo.setChargeOn(false);
-        }
-        var ch6 = deviceStatus.charAt(6);
-        if (ch6 == '1') {
-            workInfo.setSCCvargeOn(true);
-        } else {
-            workInfo.setSCCvargeOn(false);
-        }
-        var ch7 = deviceStatus.charAt(7);
-        if (ch7 == '1') {
-            workInfo.setACvargeOn(true);
-        } else {
-            workInfo.setACvargeOn(false);
-        }
-        if (workInfo.isChargeOn())
-        {
-            if ((workInfo.isSCCvargeOn()) && (workInfo.isACvargeOn())) {
-                workInfo.setChargeSource("Solar and Utility");
-            } else if (workInfo.isSCCvargeOn()) {
-                workInfo.setChargeSource("Solar");
-            } else if (workInfo.isACvargeOn()) {
-                workInfo.setChargeSource("Utility");
-            }
-        }
-        else {
-            workInfo.setChargeSource("---");
-        }
-        if (workInfo.isHasLoad())
-        {
-            if (workInfo.workMode == "Line Mode") {
-                workInfo.setLoadSource("Utility");
-            } else if (workInfo.workMode == "Battery Mode") {
-                workInfo.setLoadSource("Battery");
-            }
-        }
-        else {
-            workInfo.setLoadSource("---");
-        }
-
-        $scope.loadSource = workInfo.loadSource;
-        $scope.chargeSource = workInfo.chargeSource;
-
-}
-
+    // get equipment states
     $scope.getEq = function () {
 
-    $scope.deviceHive.getEquipmentState($scope.device.id)
-        .done(function (data) {
-            jQuery.each(data, function (index, equipment) {
-                var p = equipment.parameters.state;
-                decode_eq(equipment.id,p);
-            });
-            $scope.$apply();
-        })
-        .fail($scope.handleError);
-    }
+        $scope.deviceHive.getEquipmentState($scope.device.id)
+            .done(function (data) {
+                jQuery.each(data, function (index, equipment) {
+                    var p = equipment.parameters.state;
+                    decode_eq(equipment.id,p);
+                    register_time(equipment.timestamp);
+                });
+                $scope.$apply();
+            })
+            .fail($scope.handleError);
+        }
 
+    // default errror handler stub
     $scope.handleError = function (e) {
         alert("error "+e)
     }
+
 
 
 
@@ -275,10 +235,16 @@ var MainCtrl = function($scope) {
         console.log(val+" "+outputModes[val])
         result = $scope.deviceHive.sendCommand($scope.device.id, "setOutputSource", {"source":outputModes[val]})
         result.result(function(res) {
-            $('#load_ajax').html(res.status)
+            if (res.status == 'ACK') {
+                result = 'OK'
+            } else {
+                result = "Ошибка"
+            }
+            $('#load_ajax').html(result)
 
         });
     }
+    setInterval(recalc_time,3000);
 
 };
 
