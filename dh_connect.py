@@ -17,6 +17,7 @@ import devicehive.auto
 import devicehive.device.ws
 import devicehive.interfaces
 import threading
+import signal
 import sys
 
 import abisolar
@@ -141,7 +142,8 @@ class SolarApp(object):
         reactor.stop()
 
     def timer_func(self):
-        threading.Timer(60.0,self.timer_func).start();
+        self.timer = threading.Timer(60.0,self.timer_func)
+        self.timer.start();
         self.status_notify()
 
     def on_connected(self):
@@ -222,6 +224,16 @@ class SolarApp(object):
         else:
             print "not connected, sorry"
 
+    def disconnect(self):
+        self.factory.unsubscribe(self.info.id)
+        print "Unsubscribing..."
+        self.timer.cancel()
+
+
+def finishcallable():
+    print "Callallble on exit called"
+    close_port()
+    solar.disconnect()
 
 
 if __name__ == '__main__':
@@ -237,9 +249,10 @@ if __name__ == '__main__':
     #solar_factory = devicehive.device.ws.WebSocketFactory(solar)
     #solar_factory = devicehive.poll.PollFactory(solar)
     # Send notification right after registration
-    solar.status_notify()
+    #solar.status_notify()
     # Connect to device-hive
     #solar_factory.connect('ws://kidgo.com.ua:8080/DeviceHiveJava/websocket')
     devicehive.poll.RequestFactory.noisy=0
     solar_factory.connect('http://kidgo.com.ua:8080/DeviceHiveJava/rest')
+    reactor.addSystemEventTrigger('before', 'shutdown', finishcallable)
     reactor.run()
