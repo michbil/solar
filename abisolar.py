@@ -102,7 +102,10 @@ def query_command(cmdname, cb):
 
 def query_mode():
     def finish_mode(data):
-        return data[0]
+        if (len(data) == 1) and data[0] in 'PSLBFD':
+            return data[0]
+        else:
+            return None
 
     return query_command("QMOD", finish_mode);
 

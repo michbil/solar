@@ -11,14 +11,13 @@ class AbisolarTester(unittest.TestCase):
 
     def test_timeout(self):
 
-        print "Testing timeout"
+        print "#### Testing timeout"
         ser.setNoise("Timeout")
-        set_abisolar_timeout(0.1)
         def cb(input):
             return input
         self.assertEqual(query_command("QMOD",cb), None)
 
-        print "Testing wrong CRC reception"
+        print "#### Testing wrong CRC reception"
         ser.setNoise("CRC")
         self.assertEqual(query_command("QMOD",cb), None)
 
@@ -26,7 +25,7 @@ class AbisolarTester(unittest.TestCase):
 
     def test_query_command(self):
         ser.setNoise("Normal")
-        print "Testing query_command"
+        print "#### Testing query_command"
         def cb(input):
             return input
         self.assertEqual(query_command("QMOD",cb), QUERY_MODE_TESTBENCH)
@@ -37,21 +36,30 @@ class AbisolarTester(unittest.TestCase):
 
     def test_query_mode(self):
         ser.setNoise("Normal")
-        print "Testing query mode..."
+        print "#### Testing query mode..."
         self.assertEqual(query_mode(), QUERY_MODE_TESTBENCH)
+
+        ser.setupAnswer("Z")
+        self.assertEqual(query_mode(), None)
+        ser.setupAnswer("")
+        self.assertEqual(query_mode(), None)
+        ser.setupAnswer("sdfasdfasdfsdfsd")
+        self.assertEqual(query_mode(), None)
+
+
 
     def test_qpiri(self):
         ser.setNoise("Normal")
-        print "Testing query_settings command"
+        print "#### Testing query_settings command"
         self.assertEqual(query_settings(), {'outputSource': '1', 'chargeSource': '2'})
 
-        print "Testing trash reception"
+        print "#### Testing trash reception"
         ser.setNoise("WrongBody")
         self.assertEqual(query_settings(), None)
 
     def test_qpigs(self):
         ser.setNoise("Normal")
-        print "Testing qpigs command"
+        print "#### Testing qpigs command"
         wanted_result = {'pvInputVoltage2': 13.5,
                          'pvInputVoltage1': 0.1,
                          'outputLoadPercent': 7.0,
@@ -72,14 +80,15 @@ class AbisolarTester(unittest.TestCase):
         }
         self.assertEqual(query_params(), wanted_result)
 
-        print "Testing trash reception"
+        print "#### Testing trash reception"
         ser.setNoise("WrongBody")
         self.assertEqual(query_params(), None)
 
 
 class SerialEmu:
 
-    noiseTypes = {"Normal","CRC","Timeout","WrongBody"}
+    noiseTypes = {"Normal","CRC","Timeout","WrongBody","SetUpAnswer"}
+    setAnswer = ""
 
 
     class MyException(Exception):
@@ -88,6 +97,10 @@ class SerialEmu:
     def __init__(self):
         self.string = ""
         self.noiseType = "Normal"
+
+    def setupAnswer(self,answer):
+        self.setNoise("SetUpAnswer")
+        self.setAnswer = answer
 
     def setEmuString(self,str):
         self.string = str
@@ -107,7 +120,7 @@ class SerialEmu:
     def write(self,text):
         l = len(text)
         cmdname = text[:(l-3)]
-        print "comand", cmdname,l
+        #print "comand", cmdname,l
         result = 'NAK'
         if cmdname == "QMOD":
             result = QUERY_MODE_TESTBENCH
@@ -115,23 +128,25 @@ class SerialEmu:
             result = QPIRI_TESTBENCH
         if cmdname == "QPIGS":
             result =  QPIGS_TESTBENCH
-            #result =  '234.0 50.0 234.0 50.0 0070 0032 007 000.1 13.50 00000 10111101 22 03 00000 100'
         if cmdname[:3] == 'POP':
             result = 'ACK'
 
-        if self.noiseType == "WrongBody":
+        if self.noiseType == "WrongBody": #simulate
             result = " fdz " + result
+
+        if self.noiseType == "SetUpAnswer":
+            return self.setAnswer
 
         result = '(' + result;
         additional = ""
-        if self.noiseType == "CRC":
+        if self.noiseType == "CRC": #simulate
             additional='z' # put additional char
 
         result = result + crc(result+additional)+'\r'
-        if self.noiseType == "Timeout":
+        if self.noiseType == "Timeout": #simulate
             result = ""
 
-        print result
+       # print result
 
         self.setEmuString(result)
 
@@ -147,5 +162,6 @@ class SerialEmu:
 if __name__ == "__main__":
     ser = SerialEmu()
     init_test_with(ser)
+    set_abisolar_timeout(0.01)
 
     unittest.main()
