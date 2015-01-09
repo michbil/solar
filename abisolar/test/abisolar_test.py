@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from abisolar import *
 import serial
 import unittest
@@ -8,6 +12,12 @@ QPIRI_TESTBENCH = '230.0 04.3 230.0 50.0 04.3 1000 0800 12.0 11.8 10.5 14.1 13.5
 QPIGS_TESTBENCH = '234.0 50.0 234.0 50.0 0070 0032 007 422 13.49 00 100 0522 0000 000.1 13.50 00000 10111101 22 03 00000 100'
 
 class AbisolarTester(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        global ser
+        ser = SerialEmu()
+        init_test_with(ser)
+        set_abisolar_timeout(0.01)
 
     def test_timeout(self):
 
@@ -160,8 +170,6 @@ class SerialEmu:
         self.string = ""
 
 if __name__ == "__main__":
-    ser = SerialEmu()
-    init_test_with(ser)
-    set_abisolar_timeout(0.01)
+
 
     unittest.main()

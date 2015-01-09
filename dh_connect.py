@@ -1,12 +1,13 @@
 __author__ = 'michbil'
 
-import sys
+
 import os
 from twisted.python import log
 from twisted.internet import reactor
 from zope.interface import implements
 from ConfigParser import ConfigParser as Conf
 
+import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import devicehive
