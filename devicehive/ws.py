@@ -333,7 +333,7 @@ class WebSocketProtocol13(object):
 
     
     def frame_received(self, opcode, payload):
-        #log.msg('Websocket frame ({0}) has been received. Frame data: {1}.'.format(opcode, payload.replace("\n",'')))
+        log.msg('Websocket frame ({0}) has been received. Frame data: {1}.'.format(opcode, payload.replace("\n",'')))
         if opcode == WS_OPCODE_PING:
             log.msg('Responding with pong packet.')
             self.send_frame(True, WS_OPCODE_PONG, payload)

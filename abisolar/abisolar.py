@@ -2,7 +2,7 @@ import serial
 import time
 import sys
 import io
-from abisolar.crc import crc
+from crc import crc
 
 abisolar_timeout = 5.0
 
