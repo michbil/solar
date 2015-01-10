@@ -254,6 +254,13 @@ var MainCtrl = function($scope) {
 
         });
     }
+    $scope.setLoad = function(v) {
+        console.log($scope.checkModel[v])
+        result = $scope.deviceHive.sendCommand($scope.device.id, "setLoad", {"name":v,"value":$scope.checkModel[v]})
+        result.result(function(res) {
+
+        });
+    }
     setInterval(recalc_time,3000);
 
 };

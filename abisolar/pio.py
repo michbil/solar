@@ -48,6 +48,7 @@ class IO():
         GPIO.setmode(GPIO.BCM)
         for l in self.loads:
             GPIO.setup(self.loads[l],GPIO.OUT)
+            GPIO.output(self.loads[l],0)
 
         for l in self.inputs:
             GPIO.setup(self.inputs[l],GPIO.IN)
@@ -70,3 +71,11 @@ class IO():
             return GPIO.input(self.loads[name])
         else:
             raise ValueError
+
+    def serialize(self):
+        out = {}
+        for l in self.loads:
+            state = GPIO.input(self.loads[l])
+            out[l] = state
+        return out
+
