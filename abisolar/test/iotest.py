@@ -4,7 +4,7 @@ import os
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
-from abisolar.io import IO
+from abisolar.pio import IO
 import unittest
 
 

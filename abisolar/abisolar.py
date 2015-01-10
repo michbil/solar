@@ -1,7 +1,7 @@
 import serial
 import time
 import sys
-import io
+import pio
 from crc import crc
 
 abisolar_timeout = 5.0
