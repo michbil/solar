@@ -21,7 +21,7 @@ class FakeGPIO():
         self.ports[chan] = val
 
 
-if sys.platform == 'linux':
+if sys.platform == 'linux2':
     import RPi.GPIO as GPIO
 else:
     GPIO = FakeGPIO()
