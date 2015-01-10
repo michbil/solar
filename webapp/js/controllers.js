@@ -145,6 +145,12 @@ var MainCtrl = function($scope) {
                      $scope.loadSource = workInfo.loadSource;
                      $scope.chargeSource = workInfo.chargeSource;
                      break;
+                 case 'LS':
+                     for (i in p) {
+                         $scope.checkModel[i] = (p[i] == 1)
+                     }
+
+                     break;
 
 
              }

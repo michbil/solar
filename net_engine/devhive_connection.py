@@ -24,7 +24,7 @@ import sys
 from abisolar.abisolar import *
 from abisolar.pio import IO
 
-if sys.platform == 'darwin':
+if sys.platform == 'darwin' or sys.platform == 'win32':
     from abisolar.test.abisolar_test import SerialEmu
     seremu = SerialEmu()
     init_test_with(seremu)
@@ -191,6 +191,7 @@ class SolarApp(object):
                 return
 
             finished.callback(devicehive.CommandResult("EXEC OK"))
+            self.status_notify()
             return
 
         finished.errback(NotImplementedError('Unknown command {0}.'.format(command.command)))
@@ -201,6 +202,11 @@ class SolarApp(object):
             line_mode=None
             params=None
             settings=None
+
+            # let's send our load states
+            self.factory.notify('equipment',   {'equipment': 'LS', 'state': self.io.serialize()},     self.info.id, self.info.key)
+
+
             try:
                 line_mode = query_mode();
                 params = query_params();
@@ -238,9 +244,7 @@ class SolarApp(object):
             if settings:
                 print "Settings got, sending notification"
                 self.factory.notify('equipment',   {'equipment': 'SETT', 'state': settings},     self.info.id, self.info.key)
-                
-            # let's send our load states
-            self.factory.notify('equipment',   {'equipment': 'LS', 'state': self.io.serialize()},     self.info.id, self.info.key)
+
 
         else:
             print "not connected, sorry"
