@@ -1,23 +1,23 @@
 import sys
 import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from abisolar.abisolar import *
+from twisted.trial import unittest
 
-from abisolar import *
-import serial
-import unittest
-#ser = serial.Serial(port='/dev/tty')
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
 QUERY_MODE_TESTBENCH = 'L'
 QPIRI_TESTBENCH = '230.0 04.3 230.0 50.0 04.3 1000 0800 12.0 11.8 10.5 14.1 13.5 0 20 50 0 1 2 - 01 1 0 14.0 0 0'
 QPIGS_TESTBENCH = '234.0 50.0 234.0 50.0 0070 0032 007 422 13.49 00 100 0522 0000 000.1 13.50 00000 10111101 22 03 00000 100'
 
 class AbisolarTester(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
+    def __init__(self,methodName='runTest'):
         global ser
+        print "Creating Emulator    "
         ser = SerialEmu()
         init_test_with(ser)
-        set_abisolar_timeout(0.01)
+        set_abisolar_timeout(0.5,0.0)
+        super(AbisolarTester,self).__init__(methodName)
+
 
     def test_timeout(self):
 
@@ -169,7 +169,7 @@ class SerialEmu:
     def flushInput(self):
         self.string = ""
 
-if __name__ == "__main__":
 
+if __name__ == "__main__":
 
     unittest.main()

@@ -5,11 +5,12 @@ import io
 from crc import crc
 
 abisolar_timeout = 5.0
+base_delay=0.1
 
-
-def set_abisolar_timeout(t):
-    global abisolar_timeout
+def set_abisolar_timeout(t,d):
+    global abisolar_timeout,base_delay
     abisolar_timeout = t
+    base_delay = d
 
 
 def init():
@@ -64,7 +65,7 @@ def readline():
 
 def query_command_once(cmdname, cb):
     ser.write(cmdname + crc(cmdname) + "\x0d");
-    time.sleep(0.2);
+    time.sleep(base_delay);
 
     data = readline()
 
@@ -90,12 +91,12 @@ def query_command_once(cmdname, cb):
 
 def query_command(cmdname, cb):
     res = None
-    for i in range(1, 5):
+    for i in range(1, 2):
         res = query_command_once(cmdname, cb)
         if res:
             return res
         print "Retry number", i
-        time.sleep(0.3)
+        time.sleep(base_delay)
     print "No valid responce after retries"
     return None
 
