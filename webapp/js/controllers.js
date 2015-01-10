@@ -28,6 +28,16 @@ var MainCtrl = function($scope) {
     $scope.password = ""
     $scope.online = "..."
 
+    $scope.checkModel = {
+        ch1:false,
+        ch2:false,
+        ch3:false,
+        ch4:false,
+        ch5:false,
+        ch6:false,
+        ch7:false
+
+    }
 
     $scope.updateDeviceInfo = function () {
         $scope.name = $scope.device.name;

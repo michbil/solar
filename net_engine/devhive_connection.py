@@ -22,7 +22,7 @@ import sys
 
 
 from abisolar.abisolar import *
-
+from abisolar.pio import IO
 
 if sys.platform == 'darwin':
     from abisolar.test.abisolar_test import SerialEmu
@@ -125,6 +125,7 @@ class SolarApp(object):
         self.factory = None
         self.info = SolarInfo(config)
         self.connected = False
+        self.io = IO()
 
     def on_apimeta(self, websocket_server, server_time):
         pass
@@ -174,9 +175,21 @@ class SolarApp(object):
                 print e
                 return
 
-
             finished.callback(devicehive.CommandResult(res))
             self.status_notify()
+            return
+
+        if command.command == 'setLoad':
+            loadname = command.parameters['name']
+            value = command.parameters['value']
+            try:
+                self.io.setLoad(loadname,int(value))
+            except ValueError:
+                finished.errback(NotImplementedError('wrong parameters'))
+                print "caught exeption while setting output"
+                return
+
+            finished.callback(devicehive.CommandResult("EXEC OK"))
             return
 
         finished.errback(NotImplementedError('Unknown command {0}.'.format(command.command)))

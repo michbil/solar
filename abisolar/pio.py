@@ -17,6 +17,7 @@ class FakeGPIO():
         return self.ports[chan]
 
     def output(self,chan,val):
+        print "Setting fake output ", chan
         self.ports[chan] = val
 
 
@@ -30,9 +31,14 @@ class IO():
 
     def __init__(self):
         self.loads = {
-            "kitchen":0,
-            "fridge":1,
-            "pc1":2,
+            "ch1":10,
+            "ch2":9,
+            "ch3":11,
+            "ch4":7,
+            "ch5":8,
+            "ch6":25,
+            "ch7":24,
+
         }
         self.inputs = {
             "presense1":0,
