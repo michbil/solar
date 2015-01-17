@@ -17,6 +17,7 @@ import devicehive.auto
 import devicehive.device.ws
 import devicehive.interfaces
 import threading
+from twisted.internet import task
 import signal
 import pdb
 import sys
@@ -131,29 +132,13 @@ class SolarApp(object):
         self.stopFlag = []
         self.timer = []
 
+
         if delay == None:
             self.updateDelay = 60.0
         else:
             self.updateDelay = delay
-
-        self.stopFlag = threading.Event()
-        self.timer = self.TimerThread(self.stopFlag,self.update,self.updateDelay)
-        self.timer.start();
-
-    class TimerThread(threading.Thread):
-        def __init__(self, event,func,delay):
-            threading.Thread.__init__(self)
-            self.stopped = event
-            self.func = func
-            self.delay = delay
-
-        def run(self):
-            print "Starting timer thread"
-            while not self.stopped.wait(self.delay):
-                print "Refreshing data"
-                self.func()
-            print "finishing timer thread"
-
+        self.timer = task.LoopingCall(self.update)
+        self.timer.start(self.updateDelay)
 
 
     def on_apimeta(self, websocket_server, server_time):
@@ -276,8 +261,7 @@ class SolarApp(object):
             print "not connected, sorry"
 
     def disconnect(self):
-        self.stopFlag.set()
-        self.timer.join()
+        self.stopFlag.stop()
         print self.timer.isAlive()
         self.factory.unsubscribe(self.info.id)
         print "Unsubscribing..."

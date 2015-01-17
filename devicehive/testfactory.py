@@ -9,7 +9,7 @@ __all__ = ['TestFactory']
 
 
 def LOG_MSG(msg):
-    log.msg(msg)
+    print msg
 
 
 def LOG_ERR(msg):

@@ -26,7 +26,7 @@ class SolarAppTest(unittest.TestCase):
         self.solar = SolarApp(conf,2.0)
         self.solar_factory = devicehive.testfactory.TestFactory(self.solar)
 
-        self.solar_factory.connect('127.0.0.1')
+
 
     def tearDown(self):
         print "Tearing down"
@@ -36,8 +36,8 @@ class SolarAppTest(unittest.TestCase):
 
 
     def test_app(self):
-
-        time.sleep(20)
+        self.solar_factory.connect('127.0.0.1')
+        time.sleep(2)
 
 
 
