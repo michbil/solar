@@ -38,6 +38,7 @@ class SolarAppTest(unittest.TestCase):
     def test_app(self):
         self.solar_factory.connect('127.0.0.1')
         time.sleep(2)
+        print self.solar_factory.getNotifications()
 
 
 

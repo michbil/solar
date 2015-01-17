@@ -50,6 +50,13 @@ class TestFactory(object):
         self.devices = {}
         self.factories = {}
         self.timestamp = datetime.utcnow()
+        self.notifications = []
+
+    def getNotifications(self):
+        return self.notifications
+
+    def clearNotifications(self):
+        self.notifications = []
 
     def authenticate(self, device_id, device_key):
         """
@@ -78,6 +85,7 @@ class TestFactory(object):
                 LOG_ERR('Failed to send notification.')
                 defer.errback(reason)
             ok("OK")
+            self.notifications.append(notification)
             return defer
         else :
             return fail(DhError('device_id parameter expected'))
