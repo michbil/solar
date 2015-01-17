@@ -18,6 +18,7 @@ import devicehive.device.ws
 import devicehive.interfaces
 import threading
 import signal
+import pdb
 import sys
 
 
@@ -122,11 +123,38 @@ class SolarApp(object):
     
     implements(devicehive.interfaces.IProtoHandler)
     
-    def __init__(self, config):
+    def __init__(self, config,delay=None):
         self.factory = None
         self.info = SolarInfo(config)
         self.connected = False
         self.io = IO()
+        self.stopFlag = []
+        self.timer = []
+
+        if delay == None:
+            self.updateDelay = 60.0
+        else:
+            self.updateDelay = delay
+
+        self.stopFlag = threading.Event()
+        self.timer = self.TimerThread(self.stopFlag,self.update,self.updateDelay)
+        self.timer.start();
+
+    class TimerThread(threading.Thread):
+        def __init__(self, event,func,delay):
+            threading.Thread.__init__(self)
+            self.stopped = event
+            self.func = func
+            self.delay = delay
+
+        def run(self):
+            print "Starting timer thread"
+            while not self.stopped.wait(self.delay):
+                print "Refreshing data"
+                self.func()
+            print "finishing timer thread"
+
+
 
     def on_apimeta(self, websocket_server, server_time):
         pass
@@ -143,16 +171,14 @@ class SolarApp(object):
         print "Failure, Finishing reactor"
         reactor.stop()
 
-    def timer_func(self):
-        self.timer = threading.Timer(60.0,self.timer_func)
-        self.timer.start();
+    def update(self):
         self.status_notify()
 
     def on_connected(self):
 
         def on_subscribe(result) :
             self.connected = True
-            self.timer_func()
+            self.update()
             def on_subsc(res):
                 print '!!!! SUBSCRIBED'
             self.factory.subscribe(self.info.id, self.info.key).addCallback(on_subsc)
@@ -250,9 +276,11 @@ class SolarApp(object):
             print "not connected, sorry"
 
     def disconnect(self):
+        self.stopFlag.set()
+        self.timer.join()
+        print self.timer.isAlive()
         self.factory.unsubscribe(self.info.id)
         print "Unsubscribing..."
-        self.timer.cancel()
 
 
 

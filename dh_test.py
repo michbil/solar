@@ -36,16 +36,8 @@ if __name__ == '__main__':
     conf.read(os.path.join(os.path.dirname(__file__), os.path.splitext(os.path.basename(__file__))[0] + '.cfg'))
     # create device-delegate instance
     solar = SolarApp(conf)
-    # Automacti factory
-    # Also it is possible to use C{devicehive.poll.PollFactory} or C{devicehive.ws.WebSocketFactory}
-    solar_factory = devicehive.auto.AutoFactory(solar)
-    #solar_factory = devicehive.device.ws.WebSocketFactory(solar)
-    #solar_factory = devicehive.poll.PollFactory(solar)
-    # Send notification right after registration
-    #solar.status_notify()
-    # Connect to device-hive
-    #solar_factory.connect('ws://kidgo.com.ua:8080/DeviceHiveJava/websocket')
-    devicehive.poll.RequestFactory.noisy=0
+    solar_factory = devicehive.testfactory.TestFactory(solar)
+
     solar_factory.connect('http://kidgo.com.ua:8080/DeviceHiveJava/rest')
     reactor.addSystemEventTrigger('before', 'shutdown', finishcallable)
     reactor.run()

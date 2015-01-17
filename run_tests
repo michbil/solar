@@ -1,0 +1,3 @@
+trial abisolar.test.abisolar_test
+trial abisolar.test.iotest
+trial net_engine.test.solarapptest
