@@ -261,8 +261,7 @@ class SolarApp(object):
             print "not connected, sorry"
 
     def disconnect(self):
-        self.stopFlag.stop()
-        print self.timer.isAlive()
+        self.timer.stop()
         self.factory.unsubscribe(self.info.id)
         print "Unsubscribing..."
 
