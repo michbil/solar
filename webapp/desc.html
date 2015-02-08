@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en" ng-app="hex">
+<head>
+    <meta charset="UTF-8">
+    <title>PV battery monitor</title>
+    <link href="//fonts.googleapis.com/css?family=Droid+Sans Mono:400" rel="stylesheet" type="text/css">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/angular-ui-tree.min.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+</head>
+<body ng-controller="main">
+
+
+
+
+<nav class="navbar navbar-inverse navbar-default nav-padless" role="navigation">
+    <div>
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="index.html">Battery Monitor</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="desc.html">About</a></li>
+
+
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+
+<div class="container">
+    <h1>Project description</h1>
+    <p>This is my solar battery monitoring system based on Raspberry PI. It monitors six solar panels connected to
+    battery charging controller. Communication with battery controller is made through Raspberry PI serial port at 2400 baud. </p>
+    <p>Solar panel paramets and utility voltage parameters are accessible via <a href="http://michbil.github.io/solar/webapp/index.html">web interface</a>. </p>
+    <img class="well" src="photos/ph3.jpg">
+    <img src="photos/screen.jpg" class="well">
+    <img class="well" src="photos/ph2.jpg">
+    <img class="well" src="photos/ph1.jpg">
+
+</div>
+
+
+
+<script src="lib/jquery-1.11.1.js"></script>
+<script src="lib/jquery.mousewheel.js"></script>
+<script src="lib/bootstrap.min.js"></script>
+<script src="lib/devicehive.js"></script>
+<script src="lib/angular.min.js"></script>
+<script src="lib/angular-ui-tree.js"></script>
+<script src="lib/ui-bootstrap-tpls-0.12.0.js"></script>
+<script src='lib/scalyr.js'></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+<script src="js/app.js"></script>
+<script src="js/directives.js"></script>
+<script src="js/workinfo.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/controllers.js"></script>
+
+<!--    <script src="js/calc_eval.js"></script> -->
+
+</body>
+</html>
