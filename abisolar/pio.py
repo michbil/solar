@@ -38,6 +38,9 @@ class IO():
             "ch5":8,
             "ch6":25,
             "ch7":24,
+            "dsch":23, # three new channels
+            "chg":22,
+            "line":21
 
         }
         self.inputs = {

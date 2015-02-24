@@ -81,6 +81,7 @@ class WebSocketFactory(ClientFactory):
 
     url = 'ws://localhost'
     proto = None
+    noisy = False
 
     def __init__(self, handler):
         if not IClientApp.implementedBy(handler.__class__) :
@@ -186,7 +187,8 @@ class WebSocketFactory(ClientFactory):
         return defer
     
     def do_notification(self, msg):
-        LOG_MSG('Notification {0} has been received.'.format(msg['notification']))
+        if self.noisy:
+            LOG_MSG('Notification {0} has been received.'.format(msg['notification']))
         self.handler.do_notification(msg['deviceGuid'], Notification(name = msg['notification']['notification'], parameters = msg['notification']['parameters']))
     
     def do_command_update(self, msg):

@@ -221,6 +221,9 @@ class SolarApp(object):
 
             if params:
                 print "Params got, sending notification"
+
+                # self.io.setLoad("",int(value));
+
                 self.factory.notify('equipment',   {'equipment': 'PVV', 'state': params["pvInputVoltage1"]},     self.info.id, self.info.key)
                 self.factory.notify('equipment',   {'equipment': 'PVP', 'state': params["pvInputPower1"]},     self.info.id, self.info.key)
                 self.factory.notify('equipment',   {'equipment': 'PVC', 'state': params["pvInputCurrent"]},     self.info.id, self.info.key)

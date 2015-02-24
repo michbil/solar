@@ -23,8 +23,8 @@ class Monitor():
         params=None
         settings=None
         try:
-            line_mode = query_mode();
-            params = query_params();
+            line_mode = query_mode()
+            params = query_params()
             settings = query_settings()
         except Exception as e:
             print 'Caught exeception while status-notify'
