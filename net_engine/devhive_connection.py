@@ -191,7 +191,8 @@ class SolarApp(object):
                 return
 
             finished.callback(devicehive.CommandResult("EXEC OK"))
-            self.status_notify()
+            if not ('silent' in command.parameters):
+                self.status_notify()
             return
 
         finished.errback(NotImplementedError('Unknown command {0}.'.format(command.command)))
