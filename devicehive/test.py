@@ -18,7 +18,7 @@ from devicehive.utils import TextDataConsumer, JsonDataConsumer
 
 
 __all__ = ['JsonDataProducer', 'JsonDataConsumer', 'BaseRequest', 'RegisterRequest', 'NotifyRequest',
-           'ReportRequest', 'CommandRequest', 'PollFactory']
+           'ReportRequest', 'CommandRequest', 'TestFactory']
 
 
 def LOG_MSG(msg):
@@ -29,7 +29,7 @@ def LOG_ERR(msg):
     log.err(msg)
 
 
-class IPollOwner(Interface):
+class ITestOwner(Interface):
     url  = Attribute('devicehive API url')
     host = Attribute('devicehive host. it is used dring HTTP headers forming. TODO: consider to get rid of it.')
     port = Attribute('devicehive API port')
@@ -83,7 +83,7 @@ class JsonDataProducer(object):
         pass
 
 
-class PollCommand(BaseCommand) :
+class TestCommand(BaseCommand) :
     def to_dict(self):
         """
         @return dict representation of the object
@@ -105,7 +105,7 @@ class PollCommand(BaseCommand) :
     
     @staticmethod
     def create(message) :
-        res = PollCommand()
+        res = TestCommand()
         res.id = message['id']
         res.timestamp = message['timestamp'] if 'timestamp' in message else None
         res.user_id = message['userId'] if 'userId' in message else None
@@ -151,7 +151,7 @@ class RegisterRequest(BaseRequest):
 
 class CommandRequest(BaseRequest):
     """
-    L{CommandRequest} sends poll request to a server. The first poll request
+    L{CommandRequest} sends Test request to a server. The first Test request
     does not contain timestamp field in this case server will use
     current time in UTC.
     """
@@ -233,9 +233,9 @@ class RequestFactory(ClientFactory):
         return RequestProtocol(self.req, defer)
 
 
-class CommandPollProtocol(HTTP11ClientProtocol):
+class CommandTestProtocol(HTTP11ClientProtocol):
     """
-    CommandPollProtocol sends command-request to the server,
+    CommandTestProtocol sends command-request to the server,
     receives command response or error, pass it for processing and
     finally passes result back to an owner.
     """
@@ -246,7 +246,7 @@ class CommandPollProtocol(HTTP11ClientProtocol):
         self.owner = owner
 
     def connectionMade(self):
-        LOG_MSG('Sending command poll request for device: {0}.'.format(self.owner.info))
+        LOG_MSG('Sending command Test request for device: {0}.'.format(self.owner.info))
         self.request(CommandRequest(self.owner.info,
                                     self.owner.url,
                                     self.owner.host,
@@ -298,7 +298,7 @@ class CommandPollProtocol(HTTP11ClientProtocol):
         self.owner.send_report(command['id'], res)
 
     def command_received(self, cmd_data):
-        LOG_MSG('Poll command got response. Response: {0}.'.format(cmd_data))
+        LOG_MSG('Test command got response. Response: {0}.'.format(cmd_data))
         for cmd in cmd_data:
             # Obtain only new commands next time
             cmd_date = parse_date(cmd['timestamp'])
@@ -322,7 +322,7 @@ class CommandPollProtocol(HTTP11ClientProtocol):
                 self.command_failed(cmd, err)
 
     def success(self, response):
-        LOG_MSG('Got command poll response from the server for device {0}.'.format(self.owner.info))
+        LOG_MSG('Got command Test response from the server for device {0}.'.format(self.owner.info))
         if response.code in [200, 201]:
             def err(reason):
                 LOG_ERR('Failed to parse command request response. Reason: <{0}>.'.format(reason))
@@ -332,24 +332,24 @@ class CommandPollProtocol(HTTP11ClientProtocol):
             response.deliverBody(JsonDataConsumer(result))
         else:
             def on_get_response_text(error_text):
-                LOG_ERR('Invalid response has been received during command polling. Reason: {0}.'.format(error_text))
+                LOG_ERR('Invalid response has been received during command Testing. Reason: {0}.'.format(error_text))
                 self.failure(DhError(error_text))
             d = Deferred()
             d.addBoth(on_get_response_text)
             response.deliverBody(TextDataConsumer(d))
 
     def failure(self, reason):
-        LOG_ERR('Failed to poll devicehive server for a command. Reason: {0}.'.format(reason))
+        LOG_ERR('Failed to Test devicehive server for a command. Reason: {0}.'.format(reason))
         self.owner.failure(reason)
 
 
-class DevicePollFactory(ClientFactory):
+class DeviceTestFactory(ClientFactory):
     proto = None
     recall = None
     
     def __init__(self, owner, info, deferred):
-        if not IPollOwner.implementedBy(owner.__class__) :
-            raise TypeError('owner has to implement IPollOwner interface.')
+        if not ITestOwner.implementedBy(owner.__class__) :
+            raise TypeError('owner has to implement ITestOwner interface.')
         self.owner = owner
         self.timestamp = self.owner.timestamp
         self.info = info
@@ -364,8 +364,8 @@ class DevicePollFactory(ClientFactory):
     port = property(fget = lambda self : self.owner.port)
     
     def buildProtocol(self, addr):
-        LOG_MSG('Building devicehive command poll protocol object.')
-        self.proto = CommandPollProtocol(self)
+        LOG_MSG('Building devicehive command Test protocol object.')
+        self.proto = CommandTestProtocol(self)
         return self.proto
     
     def clientConnectionSuccess(self):
@@ -380,15 +380,15 @@ class DevicePollFactory(ClientFactory):
             self.deferred.errback(reason)
     
     def clientConnectionLost(self, connector, reason):
-        LOG_ERR('Client has lost command poll connection to the devicehive server.')
+        LOG_ERR('Client has lost command Test connection to the devicehive server.')
         def reconnect(connector) :
             connector.connect()
         if not self.stopped :
             LOG_MSG('Reconnecting client {0} to the server {1}:{2}.'.format(self.info, self.url, self.host))
-            self.recall = reactor.callLater(self.owner.poll_interval, reconnect, connector)
+            self.recall = reactor.callLater(self.owner.Test_interval, reconnect, connector)
     
     def stop(self):
-        """ Stops command polling. """
+        """ Stops command Testing. """
         # TODO: test this method (how it works)
         self.stop_requested = True
         if (self.recall is not None) and self.recall.active() :
@@ -416,19 +416,19 @@ class DevicePollFactory(ClientFactory):
         self.owner.on_failure(self.info.id, reason)
 
 
-class PollFactory(object):
-    implements(IProtoFactory, IPollOwner)
+class TestFactory(object):
+    implements(IProtoFactory, ITestOwner)
     
     url = 'http://localhost'
     host = 'localhost'
     port = 80
     timestamp = None
-    poll_interval = 1.0
+    Test_interval = 1.0
     
     def __init__(self, handler):
         if not IProtoHandler.implementedBy(handler.__class__) :
             raise TypeError('handler has to implement devicehive.interfaces.IProtoHandler interface.')
-        self.handler = handler  # handler object
+        self.handler = handler
         self.handler.factory = self
         self.devices = {}
         self.factories = {}
@@ -438,17 +438,17 @@ class PollFactory(object):
         factory = RequestFactory(request, ok, err)
         reactor.connectTCP(self.host, self.port, factory)
     
-    # begin IPollOwner implementation
+    # begin ITestOwner implementation
     def on_command(self, info, cmd, finish):
         if info.id in self.devices :
-            self.handler.on_command(info.id, PollCommand.create(cmd), finish)
+            self.handler.on_command(info.id, TestCommand.create(cmd), finish)
         else :
             raise ValueError('Device {0} is not registered.'.format(info.id))
     
     def on_failure(self, device_id, reason):
         if device_id in self.devices :
             self.handler.on_failure(device_id, reason)
-    # end IPollOwner
+    # end ITestOwner
     
     # begin IProtoFactory implementation
     def authenticate(self, device_id, device_key):
@@ -471,9 +471,9 @@ class PollFactory(object):
     def subscribe(self, device_id = None, device_key = None):
         if device_id in self.devices :
             defer = Deferred()
-            factory = DevicePollFactory(self, self.devices[device_id], defer)
+            factory = DeviceTestFactory(self, self.devices[device_id], defer)
             self.factories[device_id] = factory
-            LOG_MSG('Connecting command poll factory to {0}:{1}.'.format(self.host, self.port))
+            LOG_MSG('Connecting command Test factory to {0}:{1}.'.format(self.host, self.port))
             reactor.connectTCP(self.host, self.port, factory)
             return defer
         else :
