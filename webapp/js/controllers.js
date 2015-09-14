@@ -333,11 +333,11 @@ var GraphCtrl = function ($scope) {
 app.config(function ($routeProvider,$locationProvider) {
 
     $routeProvider.when("/", {
-        templateUrl:"/monitor.html",
+        templateUrl:"monitor.html",
         controller: MainCtrl
     });
     $routeProvider.when("/graph", {
-        templateUrl:"/grpah.html",
+        templateUrl:"grpah.html",
         controller: GraphCtrl
     });
 
