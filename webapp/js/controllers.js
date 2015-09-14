@@ -17,16 +17,18 @@ getKeyByValue = function( obj, value ) {
         if (i==value) return prop;
        i++;
     }
-}
+};
+
+var loginG,passwordG;
 
 var MainCtrl = function($scope) {
 
     $scope.pvVoltage="...";
     $scope.pvCurrent="...";
 
-    $scope.login = ""
-    $scope.password = ""
-    $scope.online = "..."
+    $scope.login = "";
+    $scope.password = "";
+    $scope.online = "...";
 
     $scope.checkModel = {
         ch1:false,
@@ -216,6 +218,9 @@ var MainCtrl = function($scope) {
         if (($scope.login != undefined) && ($scope.password != undefined))  {
 
 
+            loginG = $scope.login;
+            passowrdG = $scope.password;
+
             $scope.deviceHive = new DeviceHive("http://kidgo.com.ua:8080/DeviceHiveJava/rest", $scope.login, $scope.password);
 
             $scope.deviceHive.getDevice("E50D6085-2ABA-48E9-B1C3-73C673E414B1").done(function (result) {
@@ -242,12 +247,12 @@ var MainCtrl = function($scope) {
         }
 
 
-    }
+    };
 
 
     $scope.setConnection();
     $scope.changeLoad = function (val) {
-        $('#load_ajax').html('<img src="img/ajax-loader.gif">')
+        $('#load_ajax').html('<img src="img/ajax-loader.gif">');
         console.log(val+" "+outputModes[val])
         result = $scope.deviceHive.sendCommand($scope.device.id, "setOutputSource", {"source":outputModes[val]})
         result.result(function(res) {
@@ -259,16 +264,85 @@ var MainCtrl = function($scope) {
             $('#load_ajax').html(result)
 
         });
-    }
+    };
     $scope.setLoad = function(v) {
         console.log($scope.checkModel[v])
         result = $scope.deviceHive.sendCommand($scope.device.id, "setLoad", {"name":v,"value":$scope.checkModel[v]})
         result.result(function(res) {
 
         });
-    }
+    };
     setInterval(recalc_time,3000);
 
 };
+
+
+var GraphCtrl = function ($scope) {
+
+    $scope.login = window.localStorage.getItem("login");
+    $scope.password = window.localStorage.getItem("password");
+    $scope.power = 0;
+
+    var request = superagent;
+    var csv = 'Date,Power\n';
+
+    $scope.buildGraph = function () {
+        r = request
+            .get('http://kidgo.com.ua:8080/DeviceHiveJava/rest/device/E50D6085-2ABA-48E9-B1C3-73C673E414B1/notification?take=20000&sortOrder=DESC')
+            .auth($scope.login, $scope.password)
+            .end(function(err,res) {
+                if (err) {
+                    console.log ("error",err);
+                    return;
+                }
+                //console.log("Got",res.text);
+                res.text = JSON.parse(res.text);
+                var mode = 0;var ts;
+                for (i=0;i<res.text.length;i++) {
+                    el = res.text[i];
+                    if (el.parameters.equipment == 'PVC') {
+                        mode = el.parameters.state;
+                        ts = el.timestamp;
+                    }
+                    if (el.parameters.equipment == 'PVV') {
+                        var v = el.parameters.state;
+                        var curr = mode;
+                        //console.log(sprintf('PVC %6d      PVV %6d             P %6d           %20s %10s',v,curr,curr*v,el.timestamp,ts));
+                        csv+= el.timestamp+','+curr*v+'\n';
+                        $scope.power += (curr*v/60)/1000;
+                        //console.log($scope.power);
+                        //console.log(v,curr,curr*v,el.timestamp,ts);
+                    }
+                }
+                console.log(csv);
+                $scope.power *= 0.9;
+                g = new Dygraph(
+
+                    // containing div
+                    document.getElementById("graphdiv"), csv
+
+                );
+                $scope.$apply();
+
+
+            });
+    }
+
+};
+
+app.config(function ($routeProvider,$locationProvider) {
+
+    $routeProvider.when("/", {
+        templateUrl:"/monitor.html",
+        controller: MainCtrl
+    });
+    $routeProvider.when("/graph", {
+        templateUrl:"/grpah.html",
+        controller: GraphCtrl
+    });
+
+});
+
+
 
 app = app.controller('main', ['$scope', MainCtrl]);

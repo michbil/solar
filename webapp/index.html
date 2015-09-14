@@ -8,9 +8,11 @@
     <link rel="stylesheet" href="css/styles.css" />
     <link rel="stylesheet" href="css/angular-ui-tree.min.css" />
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/superagent/1.2.0/superagent.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
 
 </head>
-<body ng-controller="main">
+<body>
 
 
 
@@ -31,6 +33,7 @@
                 <li class="active"><a href="#" ng-click="sendRefresh();">
                     Обновить<img class="refreshajax" style="display:none" src="img/ajax-loader.gif">
                 </a></li>
+                <li><a href="/#/graph">График</a></li>
                 <li><a href="">Последнее обновление: {{online}}</a></li>
                 <li><a href="desc.html">About</a></li>
                 <li><a href="http://hex.elx.com.ua">Hex editor</a></li>
@@ -42,155 +45,7 @@
 
 <div class="container">
 
-
-
-        <form class="form-signin" ng-if="login_not_done" ng-cloak>
-            <h2 class="form-signin-heading">Please sign in</h2>
-            <label for="inputEmail" class="sr-only"">Email address</label>
-            <input id="inputEmail" class="form-control" placeholder="Email address" required autofocus ng-model="login">
-            <label for="inputPassword" class="sr-only">Password</label>
-            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required  ng-model="password">
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" value="remember-me"> Remember me
-                </label>
-            </div>
-            <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="setConnection(login,password);">Sign in</button>
-        </form>
-
-
-
-
-    <div class="centerimg" ng-cloak>
-        <img src="img/bg1.png">
-        <div class="floatparams">V=<span class="red">{{pvVoltage}}В</span> I=<span class="blue">{{pvCurrent}}А</span> <br>P= <span class="green">{{(pvVoltage*pvCurrent).toPrecision(2)}}Вт</span></div>
-        <div class="floatparams2"><span class="red">{{gridVoltage}}В</span>@<span class="blue">{{gridFrequency}}Гц</span></div>
-        <div class="floatparams3">
-            <p ng-if="chargingCurrent > 0">Заряд</p>
-            <p ng-if="batDischargeCurrent > 0">Разряд </p>
-            <span class="red">{{batteryVoltage}}В</span>@<span class="blue">{{chargingCurrent+batDischargeCurrent}}А</span>
-        </div>
-    </div>
-
-    <div class="rightsection" ng-cloak>
-        <table class="table table-striped">
-            <tr>
-                <th class="tg-031e">Параметр</th>
-                <th class="tg-031e">Значение</th>
-            </tr>
-            <tr>
-                <td class="tg-031e">Активная мощность</td>
-                <td class="tg-031e">{{outputActivePower}}Вт</td>
-            </tr>
-            <tr>
-                <td class="tg-031e">Общая мощность</td>
-                <td class="tg-031e">{{outputApparentPower}}Вт</td>
-            </tr>
-            <tr>
-                <td class="tg-031e">Коеффициент мощности  </td>
-                <td class="tg-031e">{{(outputActivePower / outputApparentPower).toPrecision(2)}}  </td>
-            </tr>
-
-            <tr>
-                <td class="tg-031e">Напряжение выход  </td>
-                <td class="tg-031e">{{outputVoltage}}В  </td>
-            </tr>
-
-            <tr>
-                <td class="tg-031e">Частота выход</td>
-                <td class="tg-031e">{{outputFrequency}}Гц  </td>
-            </tr>
-
-            <tr>
-                <td class="tg-031e">Нагрузка</td>
-                <td class="tg-031e">{{batteryVoltage}}%</td>
-            </tr>
-        </table>
-
-
-    </div>
-
-
-    <div style="clear: both;" class="col-md-6" ng-cloak>
-
-        <h1>Рабочие параметры</h1>
-
-        <table class="table table-striped">
-            <tr>
-                <th class="tg-031e">Режим</th>
-                <th class="tg-031e">Значение</th>
-            </tr>
-            <tr>
-                <td class="tg-031e">Режим работы</td>
-                <td class="tg-031e">{{workMode}}</td>
-            </tr>
-            <tr>
-                <td class="tg-031e">Источник зарядки</td>
-                <td class="tg-031e">{{chargeSource}}</td>
-            </tr>
-            <tr>
-                <td class="tg-031e">Тип нагрузки</td>
-                <td class="tg-031e">{{loadSource}}</td>
-            </tr>
-
-        </table>
-
-    </div>
-
-
-    <div class="col-md-12" ng-cloak>
-
-        <h1>Настройки</h1>
-
-        <table class="table table-striped">
-            <tr>
-                <th class="tg-031e">Парметр</th>
-                <th class="tg-031e">Значение</th>
-            </tr>
-            <tr>
-                <td class="tg-031e">Приоритет зарядки</td>
-                <td class="tg-031e">
-                    <div class="btn-group">
-                        <label class="btn btn-primary" ng-model="chargePri" btn-radio="'Utility'"  >Сеть</label>
-                        <label class="btn btn-primary" ng-model="chargePri" btn-radio="'Solar first'">Cначала солнце</label>
-                        <label class="btn btn-primary" ng-model="chargePri" btn-radio="'Utility and Solar'">Солнце и сеть</label>
-                        <label class="btn btn-primary" ng-model="chargePri" btn-radio="'Solar only'">Только солнце</label>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td class="tg-031e">Приоритет питания нагрузки </td>
-                <td class="tg-031e">
-                    <div class="btn-group">
-                        <label class="btn btn-primary"  ng-model="loadPri" btn-radio="'Utility'" ng-click="changeLoad('Utility');">Сеть</label>
-                        <label class="btn btn-primary" ng-model="loadPri" btn-radio="'Solar'" ng-click="changeLoad('Solar');">Инвертор</label>
-                        <label class="btn btn-primary" ng-model="loadPri" btn-radio="'SBU'" ng-click="changeLoad('SBU');">Солн-Бат-Сеть</label>
-                    </div> <span id="load_ajax"></span>
-                </td>
-            </tr>
-            <tr>
-                <td class="tg-031e">Нагрузки</pre></td>
-                <td class="tg-031e">
-                    <div class="btn-group">
-
-                        <label class="btn btn-primary" ng-model="checkModel.ch2" btn-checkbox ng-change="setLoad('ch2');">Свет офис</label>
-                        <label class="btn btn-primary" ng-model="checkModel.ch5" btn-checkbox ng-change="setLoad('ch5');">Кухня корридор</label>
-                        <label class="btn btn-primary" ng-model="checkModel.ch4" btn-checkbox ng-change="setLoad('ch4');">Папа комп</label>
-                        <label class="btn btn-primary" ng-model="checkModel.ch7" btn-checkbox ng-change="setLoad('ch7');">Наргрузка</label>
-
-                        <label class="btn btn-primary" ng-model="checkModel.ch3" btn-checkbox ng-change="setLoad('ch3');">Свет мастреская</label>
-                        <label class="btn btn-primary" ng-model="checkModel.ch1" btn-checkbox ng-change="setLoad('ch1');">Компьютер бокс</label>
-                        <label class="btn btn-primary" ng-model="checkModel.ch6" btn-checkbox ng-change="setLoad('ch6');">Cвет бокс</label>
-
-
-                    </div>
-                </td>
-            </tr>
-
-
-        </table>
-
-    </div>
+    <div ng-view></div>
 
 
 </div>
@@ -202,6 +57,7 @@
     <script src="lib/bootstrap.min.js"></script>
     <script src="lib/devicehive.js"></script>
     <script src="lib/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.3/angular-route.js"></script>
     <script src="lib/angular-ui-tree.js"></script>
     <script src="lib/ui-bootstrap-tpls-0.12.0.js"></script>
     <script src='lib/scalyr.js'></script>

@@ -1,1 +1,1 @@
-window.app = angular.module('hex', ['sly','ui.tree','ui.bootstrap']);
+window.app = angular.module('hex', ['sly','ui.tree','ui.bootstrap','ngRoute']);
