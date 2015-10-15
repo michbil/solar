@@ -44,7 +44,7 @@ if __name__ == '__main__':
     # Send notification right after registration
     #solar.status_notify()
     # Connect to device-hive
-    #solar_factory.connect('ws://kidgo.com.ua:8080/DeviceHiveJava/websocket')
+    #solar_factory.connect('ws://kidgo.com.ua:8080/api/websocket')
     devicehive.poll.RequestFactory.noisy=0
     solar_factory.connect('http://kidgo.com.ua:8080/DeviceHiveJava/rest')
     reactor.addSystemEventTrigger('before', 'shutdown', finishcallable)
