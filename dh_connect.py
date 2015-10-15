@@ -46,6 +46,6 @@ if __name__ == '__main__':
     # Connect to device-hive
     #solar_factory.connect('ws://kidgo.com.ua:8080/api/websocket')
     devicehive.poll.RequestFactory.noisy=0
-    solar_factory.connect('http://kidgo.com.ua:8080/api/rest')
+    solar_factory.connect('http://kidgo.com.ua:8080/DeviceHiveJava/rest')
     reactor.addSystemEventTrigger('before', 'shutdown', finishcallable)
     reactor.run()
