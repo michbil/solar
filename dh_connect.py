@@ -40,7 +40,7 @@ if __name__ == '__main__':
     # Also it is possible to use C{devicehive.poll.PollFactory} or C{devicehive.ws.WebSocketFactory}
     solar_factory = devicehive.auto.AutoFactory(solar)
     #solar_factory = devicehive.device.ws.WebSocketFactory(solar)
-    #solar_factory = devicehive.poll.PollFactory(solar)
+   # solar_factory = devicehive.poll.PollFactory(solar)
     # Send notification right after registration
     #solar.status_notify()
     # Connect to device-hive
