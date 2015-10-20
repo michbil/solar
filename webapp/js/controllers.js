@@ -221,7 +221,7 @@ var MainCtrl = function($scope) {
             loginG = $scope.login;
             passowrdG = $scope.password;
 
-            $scope.deviceHive = new DeviceHive("http://kidgo.com.ua:8080/api/rest", $scope.login, $scope.password);
+            $scope.deviceHive = new DeviceHive("http://kidgo.com.ua:8080/DeviceHiveJava/rest", $scope.login, $scope.password);
 
             $scope.deviceHive.getDevice("E50D6085-2ABA-48E9-B1C3-73C673E414B1").done(function (result) {
 
