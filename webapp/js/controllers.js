@@ -275,27 +275,13 @@ var MainCtrl = function($scope) {
     setInterval(recalc_time,3000);
 
 };
-var textFile;
-var makeTextFile = function (text) {
-    var data = new Blob([text], {type: 'text/plain'});
 
-    // If we are replacing a previously generated file we need to
-    // manually revoke the object URL to avoid memory leaks.
-    if (textFile !== null) {
-        window.URL.revokeObjectURL(textFile);
-    }
-
-    textFile = window.URL.createObjectURL(data);
-
-    return textFile;
-};
 
 var GraphCtrl = function ($scope) {
 
     $scope.login = window.localStorage.getItem("login");
     $scope.password = window.localStorage.getItem("password");
     $scope.power = 0;
-    $scope.download = "";
 
     var request = superagent;
     var csv = 'Date,Power\n';
@@ -336,7 +322,6 @@ var GraphCtrl = function ($scope) {
                     document.getElementById("graphdiv"), csv
 
                 );
-                $scope.download = makeTextFile(csv);
                 $scope.$apply();
 
 
@@ -345,10 +330,7 @@ var GraphCtrl = function ($scope) {
 
 };
 
-app.config(function ($routeProvider,$compileProvider) {
-
-    $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|blob):/);
-
+app.config(function ($routeProvider,$locationProvider) {
 
     $routeProvider.when("/", {
         templateUrl:"monitor.html",
