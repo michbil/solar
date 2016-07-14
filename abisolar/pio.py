@@ -37,7 +37,7 @@ class IO():
             "ch4":7,
             "ch5":8,
             "ch6":25,
-            "ch7":24,
+            "ch7":10, # there was lock ch7 now changed
             "dsch":23, # three new channels
             "chg":22,
             "line":21
